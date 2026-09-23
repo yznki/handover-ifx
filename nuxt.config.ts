@@ -24,7 +24,12 @@ export default defineNuxtConfig({
       title: "Yazan Kiswani — Infineon Handover",
       meta: [
         { name: "description", content: "A playful landing page for Yazan Kiswani's Infineon handover." },
-        { name: "theme-color", content: "#F6F4EF" }
+        { name: "theme-color", content: "#7C3AED" }
+      ],
+      link: [
+        { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+        { rel: "icon", sizes: "32x32", href: "/favicon.ico" },
+        { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" }
       ]
     }
   },
