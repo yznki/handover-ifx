@@ -1,0 +1,5 @@
+image:
+  tag: latest
+route:
+  host: yazi-kamikazi-handover.icp.infineon.com
+namespace: play-yazi-kamikazi

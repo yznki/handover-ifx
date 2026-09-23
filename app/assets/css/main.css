@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  background: #f6f4ef;
+  color: #151417;
+  --violet: #6d3bff;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  overflow-x: hidden;
+  background: #f6f4ef;
+  color: #151417;
+  font-family: Geist, ui-sans-serif, system-ui;
+}
+
+body::before {
+  pointer-events: none;
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  opacity: 0.18;
+  mix-blend-mode: multiply;
+  background-image: radial-gradient(circle at 1px 1px, rgba(21, 20, 23, 0.2) 1px, transparent 0);
+  background-size: 5px 5px;
+}
+
+::selection {
+  background: #6d3bff;
+  color: #f6f4ef;
+}
+
+.content-prose h1,
+.content-prose h2,
+.content-prose h3 {
+  scroll-margin-top: 7rem;
+  letter-spacing: -0.04em;
+}
+
+.content-prose h1 {
+  font-size: clamp(3rem, 9vw, 8rem);
+  line-height: 0.86;
+  margin-bottom: 2rem;
+}
+
+.content-prose h2 {
+  font-size: clamp(2rem, 5vw, 4.8rem);
+  line-height: 0.92;
+  margin-top: 4rem;
+  margin-bottom: 1rem;
+}
+
+.content-prose h3 {
+  font-size: clamp(1.4rem, 3vw, 2.5rem);
+  line-height: 1;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.content-prose p,
+.content-prose li {
+  color: #39352f;
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.content-prose a {
+  color: #4e27c5;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.2em;
+}
+
+.content-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  font-size: 0.92rem;
+}
+
+.content-prose th,
+.content-prose td {
+  border-bottom: 1px solid rgba(21, 20, 23, 0.12);
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.content-prose code {
+  border-radius: 0.35rem;
+  background: rgba(109, 59, 255, 0.08);
+  color: #2a1765;
+  padding: 0.12rem 0.32rem;
+  font-family: "Geist Mono", ui-monospace;
+}
+
+.content-prose pre {
+  overflow: auto;
+  border: 1px solid rgba(21, 20, 23, 0.12);
+  border-radius: 1.25rem;
+  background: #151417;
+  color: #f6f4ef;
+  padding: 1.25rem;
+}
+
+.content-prose pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -1,0 +1,51 @@
+replicaCount: 1
+
+image:
+  repository: artifactory.intra.infineon.com/docker-des-psv-sw-local/handover-ifx
+  pullPolicy: Always
+  tag: latest
+
+serviceAccount:
+  create: true
+  automount: false
+  imagePullSecrets: artifactory
+
+podLabels:
+  app: handover-ifx
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 96Mi
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  failureThreshold: 3
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+namespace: play-yazi-kamikazi
+
+route:
+  targetPort: 8080
+  host: yazi-kamikazi-handover.icp.infineon.com
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
