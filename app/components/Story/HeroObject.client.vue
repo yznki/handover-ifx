@@ -46,8 +46,8 @@ const properties = withDefaults(defineProps<HeroObjectProperties>(), {
 
 const shapeProgress = ref<number>(0);
 const pointerPosition = ref<Vector3>(new Vector3(0, 0, 0));
-const particleCount = 84;
-const cameraPosition = new Vector3(0, 0, 5);
+const particleCount = 132;
+const cameraPosition = new Vector3(0, 0, 4.35);
 const lightPosition = new Vector3(2, 4, 6);
 const rootStyle = cva("relative", {
   variants: {
@@ -71,9 +71,9 @@ const particles = computed<ParticlePosition[]>(() => Array.from({ length: partic
   const shapes = [letterY, chart, blocks, bridge, handover];
   const vector = shapes[Math.min(storyShape, shapes.length - 1)] || letterY;
   const distance = vector.distanceTo(pointerPosition.value);
-  const pointerForce = properties.interactive ? Math.max(0, 1.6 - distance) * 0.28 : 0;
+  const pointerForce = properties.interactive ? Math.max(0, 1.85 - distance) * 0.42 : 0;
   const pointerVector = vector.clone().sub(pointerPosition.value).normalize().multiplyScalar(pointerForce);
-  const scale = 0.22 + Math.abs(wave) * 0.08;
+  const scale = 0.26 + Math.abs(wave) * 0.1;
 
   return {
     key: `particle-${particleIndex}`,
@@ -111,7 +111,7 @@ defineExpose({ setShapeProgress, setPointerPosition });
       <TresGroup :rotation="[0.25 + pointerPosition.y * 0.08, shapeProgress * 1.4 + pointerPosition.x * 0.12, 0.05]">
         <TresMesh v-for="particle in particles" :key="particle.key" :position="particle.position" :scale="particle.scale">
           <TresBoxGeometry :args="[1, 1, 1]" />
-          <TresMeshStandardMaterial color="#6D3BFF" :roughness="0.32" :metalness="0.18" />
+          <TresMeshStandardMaterial color="#6D3BFF" emissive="#3B1E8C" :emissive-intensity="0.18" :roughness="0.28" :metalness="0.12" />
         </TresMesh>
       </TresGroup>
     </TresCanvas>

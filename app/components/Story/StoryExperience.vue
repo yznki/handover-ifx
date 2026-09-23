@@ -80,6 +80,50 @@ const dotButtonStyle = cva("h-3 w-3 rounded-full border transition focus:outline
     }
   }
 });
+const screenCompositionStyle = cva("relative z-10 grid h-[100svh] min-h-[620px] snap-start grid-rows-[auto_minmax(0,1fr)] overflow-hidden px-4 pb-4 pt-20 md:min-h-[640px] md:px-8 md:pb-8 md:pt-24", {
+  variants: {
+    layout: {
+      hero: "",
+      leftToy: "grid gap-4 md:grid-cols-[minmax(0,0.62fr)_minmax(18rem,0.38fr)]",
+      rightToy: "grid gap-4 md:grid-cols-[minmax(18rem,0.38fr)_minmax(0,0.62fr)]",
+      overlay: "grid",
+      tiny: "grid gap-4 md:grid-cols-[minmax(0,0.55fr)_minmax(18rem,0.45fr)]"
+    }
+  }
+});
+const copyPanelStyle = cva("relative z-20 min-w-0 self-start md:self-center", {
+  variants: {
+    layout: {
+      hero: "max-w-4xl self-start pt-4 mix-blend-multiply md:pt-10",
+      leftToy: "order-1 md:order-2",
+      rightToy: "order-1 md:order-1",
+      overlay: "pointer-events-none absolute left-4 top-20 max-w-[38rem] md:left-8 md:top-24",
+      tiny: "order-1"
+    }
+  }
+});
+const toyPanelStyle = cva("relative z-10 min-h-0", {
+  variants: {
+    layout: {
+      hero: "absolute inset-x-4 bottom-4 top-24 md:inset-x-8 md:bottom-8 md:top-24",
+      leftToy: "order-2 h-full md:order-1",
+      rightToy: "order-2 h-full md:order-2",
+      overlay: "h-full pt-44 md:pt-0",
+      tiny: "order-2 h-full"
+    }
+  }
+});
+const headlineStyle = cva("font-extrabold leading-[0.95] tracking-[-0.04em] text-ink", {
+  variants: {
+    layout: {
+      hero: "max-w-[9ch] text-[clamp(4rem,11vw,9rem)] md:text-[clamp(5rem,12vw,11rem)]",
+      leftToy: "max-w-[10ch] text-[clamp(2.7rem,6.8vw,6rem)]",
+      rightToy: "max-w-[10ch] text-[clamp(2.7rem,6.8vw,6rem)]",
+      overlay: "max-w-[9ch] text-[clamp(2.6rem,6.2vw,5.8rem)]",
+      tiny: "max-w-[10ch] text-[clamp(2.7rem,6.8vw,6rem)]"
+    }
+  }
+});
 
 const { data: storyDocuments } = await useAsyncData("story-trailer-documents", () => queryCollection("documents").where("path", "LIKE", "/story/%").order("order", "ASC").all());
 const { prefersReducedMotion } = useReducedMotion();
@@ -96,6 +140,28 @@ const savedScreenIndex = computed<number>(() => {
   const matchingIndex = storyScreens.value.findIndex((screen) => screen.path === lastChapterPath.value);
   return matchingIndex >= 0 ? matchingIndex : 0;
 });
+
+/**
+ * Resolves the visual composition for a screen.
+ * @param screen - Trailer screen.
+ * @param screenIndex - Screen index.
+ * @returns Composition variant.
+ */
+function getScreenLayout(screen: StoryScreenDocument, screenIndex: number): "hero" | "leftToy" | "rightToy" | "overlay" | "tiny" {
+  const toyType = screen.toy?.type || "";
+  const layoutByToyType: Record<string, "hero" | "leftToy" | "rightToy" | "overlay" | "tiny"> = {
+    hero: "hero",
+    "mind-quiz": "overlay",
+    "red-flags": "overlay",
+    "repo-map": "rightToy",
+    "aida-drop": "leftToy",
+    pipeline: "rightToy",
+    "cvc-split": "leftToy",
+    valibridge: "tiny",
+    outro: "leftToy"
+  };
+  return layoutByToyType[toyType] || (screenIndex % 2 === 0 ? "rightToy" : "leftToy");
+}
 
 /**
  * Assigns screen references from the template.
@@ -206,9 +272,9 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <main class="relative min-h-screen overflow-x-hidden bg-paper pt-16" @pointermove="updatePointerPosition">
+  <main class="relative min-h-screen snap-y snap-mandatory overflow-x-hidden bg-paper motion-reduce:snap-none" @pointermove="updatePointerPosition">
     <ClientOnly>
-      <div class="pointer-events-none fixed inset-0 z-0 opacity-25 mix-blend-multiply motion-reduce:hidden">
+      <div class="pointer-events-none fixed inset-0 z-0 opacity-55 mix-blend-multiply motion-reduce:hidden">
         <HeroObject ref="floatingHeroObject" floating interactive />
       </div>
     </ClientOnly>
@@ -217,31 +283,33 @@ onBeforeUnmount(() => {
       <div class="h-full bg-violet-500 transition-all duration-500" :style="{ width: `${progressPercentage}%` }" />
     </div>
 
-    <nav class="fixed left-4 right-4 top-4 z-50 flex items-center justify-between gap-4 rounded-full border border-ink/10 bg-paper/75 px-4 py-3 backdrop-blur md:left-8 md:right-8">
-      <button v-if="hasProgress" class="hidden rounded-full bg-ink px-4 py-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-paper transition hover:bg-violet-700 md:block" @click="continueTrailer">Continue</button>
-      <NuxtLink v-else to="/docs/aida-architecture" class="hidden rounded-full bg-ink px-4 py-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-paper transition hover:bg-violet-700 md:block">Explore</NuxtLink>
-      <div class="mx-auto flex items-center gap-3">
+    <nav class="fixed left-4 right-4 top-4 z-50 grid grid-cols-[auto_1fr_auto] items-center gap-4 rounded-full border border-ink/10 bg-paper/90 px-3 py-3 shadow-editorial backdrop-blur md:left-8 md:right-8 md:px-4">
+      <div class="flex items-center gap-2">
+        <button class="grid h-9 w-9 place-items-center rounded-full bg-violet-500 font-mono text-[0.65rem] font-bold text-paper shadow-violet" aria-label="Yazan Kiswani story start" @click="goToScreen(0)">YK</button>
+        <button v-if="hasProgress" class="hidden rounded-full bg-ink px-4 py-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-paper transition hover:bg-violet-700 md:block" @click="continueTrailer">Continue</button>
+      </div>
+      <div class="mx-auto flex items-center gap-2 md:gap-3">
         <button v-for="(screen, screenIndex) in storyScreens" :key="screen.path" :class="dotButtonStyle({ active: activeScreenIndex === screenIndex })" :aria-label="`Go to ${screen.title}`" @click="goToScreen(screenIndex)" />
       </div>
       <NuxtLink to="/docs/aida-architecture" class="rounded-full border border-ink/10 px-4 py-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ink transition hover:border-violet-500 hover:text-violet-700">Explore</NuxtLink>
     </nav>
 
-    <section v-for="(screen, screenIndex) in storyScreens" :id="`story-screen-${screen.order || screenIndex}`" :key="screen.path" :ref="getScreenElementSetter(screenIndex)" :data-screen-index="screenIndex" data-story-screen class="relative z-10 grid min-h-screen scroll-mt-0 grid-rows-[auto_minmax(0,1fr)] gap-4 px-4 pb-5 pt-24 md:px-8 md:pb-6 md:pt-24">
-      <div class="grid min-h-0 gap-4 md:grid-cols-[minmax(0,1.05fr)_minmax(28rem,0.95fr)] md:items-end">
-        <div class="min-w-0">
+    <section v-for="(screen, screenIndex) in storyScreens" :id="`story-screen-${screen.order || screenIndex}`" :key="screen.path" :ref="getScreenElementSetter(screenIndex)" :data-screen-index="screenIndex" data-story-screen :class="screenCompositionStyle({ layout: getScreenLayout(screen, screenIndex) })">
+      <div :class="copyPanelStyle({ layout: getScreenLayout(screen, screenIndex) })">
+        <div class="max-w-2xl">
           <p class="font-mono text-xs uppercase tracking-[0.28em] text-violet-700">{{ screen.chapter }} / {{ screen.title }}</p>
-          <h1 class="mt-3 max-w-[12ch] text-[clamp(3.3rem,8.8vw,8.8rem)] font-extrabold leading-[0.95] tracking-[-0.04em] text-ink md:max-w-[10.5ch]">
+          <h1 :class="headlineStyle({ layout: getScreenLayout(screen, screenIndex) })">
             {{ screen.headline }}
           </h1>
-        </div>
-        <div class="min-w-0 md:pb-5">
-          <p class="max-w-2xl text-[clamp(1.05rem,2vw,1.75rem)] leading-tight text-muted">{{ screen.subline }}</p>
+          <p class="mt-4 max-w-2xl text-[clamp(1rem,1.6vw,1.45rem)] leading-tight text-muted">{{ screen.subline }}</p>
           <NuxtLink v-if="screen.toy?.linkTo" :to="screen.toy.linkTo" class="mt-5 inline-flex rounded-full bg-violet-500 px-5 py-3 font-mono text-xs uppercase tracking-[0.18em] text-paper transition hover:bg-violet-700">
             {{ screen.toy.linkLabel || "the real version" }} →
           </NuxtLink>
         </div>
       </div>
-      <StoryToy :toy="screen.toy" :order="screen.order || screenIndex" @start="startTrailer" @next="goToNextScreen" @replay="replayTrailer" />
+      <div :class="toyPanelStyle({ layout: getScreenLayout(screen, screenIndex) })">
+        <StoryToy :toy="screen.toy" :order="screen.order || screenIndex" @start="startTrailer" @next="goToNextScreen" @replay="replayTrailer" />
+      </div>
     </section>
   </main>
 </template>

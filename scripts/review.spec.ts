@@ -80,7 +80,9 @@ test("story trailer screens and toys work", async ({ page }) => {
 
   const quizScreen = await scrollToStoryScreen(page, 1);
   await quizScreen.getByRole("button", { name: "Fix upstream in CVC" }).click();
+  await quizScreen.locator("[data-quiz-next]").click();
   await quizScreen.getByRole("button", { name: "Ship quick, imperfect, then clean" }).click();
+  await quizScreen.locator("[data-quiz-next]").click();
   await quizScreen.getByRole("button", { name: "Whoever makes more sense wins" }).click();
   await waitForSettledLocalRendering(page);
   await page.screenshot({ path: `${reviewDirectory}\\story-interaction-quiz.png`, fullPage: false });
@@ -126,6 +128,48 @@ test("story trailer screens and toys work", async ({ page }) => {
     await scrollToStoryScreen(page, screenIndex);
     await page.screenshot({ path: `${reviewDirectory}\\story-mobile-${String(screenIndex + 1).padStart(2, "0")}.png`, fullPage: false });
   }
+
+  const mobileQuizScreen = await scrollToStoryScreen(page, 1);
+  await mobileQuizScreen.getByRole("button", { name: "Fix upstream in CVC" }).click();
+  await mobileQuizScreen.locator("[data-quiz-next]").click();
+  await mobileQuizScreen.getByRole("button", { name: "Ship quick, imperfect, then clean" }).click();
+  await mobileQuizScreen.locator("[data-quiz-next]").click();
+  await mobileQuizScreen.getByRole("button", { name: "Whoever makes more sense wins" }).click();
+  await waitForSettledLocalRendering(page);
+  await page.screenshot({ path: `${reviewDirectory}\\story-mobile-interaction-quiz.png`, fullPage: false });
+
+  const mobileRedFlagsScreen = await scrollToStoryScreen(page, 2);
+  const mobileRedFlagButtons = mobileRedFlagsScreen.locator("[data-toy='red-flags'] button");
+  const mobileRedFlagCount = await mobileRedFlagButtons.count();
+  for (const redFlagIndex of Array.from({ length: mobileRedFlagCount }, (_unusedValue, currentIndex) => currentIndex)) {
+    await mobileRedFlagButtons.nth(redFlagIndex).click();
+  }
+  await waitForSettledLocalRendering(page);
+  await page.screenshot({ path: `${reviewDirectory}\\story-mobile-interaction-red-flags.png`, fullPage: false });
+
+  const mobileMapScreen = await scrollToStoryScreen(page, 3);
+  await mobileMapScreen.getByRole("button", { name: "CVC" }).press("ArrowRight");
+  await mobileMapScreen.getByRole("button", { name: "CVC" }).press("ArrowDown");
+  await waitForSettledLocalRendering(page);
+  await page.screenshot({ path: `${reviewDirectory}\\story-mobile-interaction-map.png`, fullPage: false });
+
+  const mobileAidaScreen = await scrollToStoryScreen(page, 4);
+  await mobileAidaScreen.locator("[data-drop-zone]").click();
+  await waitForSettledLocalRendering(page);
+  await page.screenshot({ path: `${reviewDirectory}\\story-mobile-interaction-aida-drop.png`, fullPage: false });
+
+  const mobilePipelineScreen = await scrollToStoryScreen(page, 5);
+  await mobilePipelineScreen.getByRole("button", { name: "master stable" }).click();
+  await mobilePipelineScreen.locator("[data-git-push]").click();
+  await expect(mobilePipelineScreen.getByText("deploy reached oc deploy")).toBeVisible({ timeout: 5_000 });
+  await waitForSettledLocalRendering(page);
+  await page.screenshot({ path: `${reviewDirectory}\\story-mobile-interaction-pipeline.png`, fullPage: false });
+
+  const mobileCvcScreen = await scrollToStoryScreen(page, 6);
+  await mobileCvcScreen.locator("[data-monolith-block]").click();
+  await waitForSettledLocalRendering(page);
+  await page.screenshot({ path: `${reviewDirectory}\\story-mobile-interaction-cvc-split.png`, fullPage: false });
+
   await page.screenshot({ path: `${reviewDirectory}\\story-mobile.png`, fullPage: true });
 
   await page.emulateMedia({ reducedMotion: "reduce" });
