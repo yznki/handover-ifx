@@ -1,7 +1,10 @@
 ---
 title: 'Test a CVC change inside a consumer app'
 description: 'Test a CVC change inside a consumer app'
-order: 15
+order: 6
+section: 'cvc'
+owner: 'Sandro'
+updated: '2026-09-23'
 ---
 
 # Test a CVC change inside a consumer app

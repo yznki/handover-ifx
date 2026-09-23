@@ -1,7 +1,10 @@
 ---
 title: 'AIDA architecture overview'
 description: 'AIDA architecture overview'
-order: 12
+order: 3
+section: 'aida'
+owner: 'Uqba'
+updated: '2026-09-23'
 ---
 
 # AIDA architecture overview

@@ -1,7 +1,10 @@
 ---
 title: 'What to do when semantic-release fails'
 description: 'What to do when semantic-release fails'
-order: 16
+order: 5
+section: 'cvc'
+owner: 'Sandro'
+updated: '2026-09-23'
 ---
 
 # What to do when semantic-release fails
@@ -53,6 +56,8 @@ Keep fixes narrow. A semantic-release failure is usually configuration or permis
 
 ## Recovery rule
 
+::warning
 Do not manually create a tag unless the team has decided that semantic-release state is irrecoverable. A hand-created tag can confuse the next automated run. Prefer fixing commit format, token permissions, branch configuration, or dotenv propagation, then rerun the intended job.
+::
 
 When in doubt, preserve the automated release history. The safest repair is the one that lets semantic-release make the next tag itself.

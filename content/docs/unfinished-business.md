@@ -1,7 +1,10 @@
 ---
 title: 'Unfinished business'
 description: 'Unfinished business'
-order: 10
+order: 4
+section: 'start'
+owner: 'Sandro + Uqba'
+updated: '2026-09-23'
 ---
 
 # Unfinished business
@@ -25,7 +28,9 @@ This page expands the interactive checklist with context. It is grounded in the 
 
 ## What not to do
 
+::warning
 Do not turn the CVC split into an approved plan without Kevin. Do not write secret values into the handover. Do not keep `showcase/aida-demo` as a long-lived integration branch. Do not let the planning Jira token die with Yazan's account.
+::
 
 ## Why the checklist is localStorage
 

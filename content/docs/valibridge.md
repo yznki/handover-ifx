@@ -1,7 +1,10 @@
 ---
 title: 'ValiBridge status'
 description: 'ValiBridge status'
-order: 17
+order: 1
+section: 'valibridge'
+owner: 'Uqba + Sandro'
+updated: '2026-09-23'
 ---
 
 # ValiBridge status

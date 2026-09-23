@@ -1,7 +1,10 @@
 ---
 title: 'People and access'
 description: 'People and access'
-order: 18
+order: 3
+section: 'start'
+owner: 'Kevin'
+updated: '2026-09-23'
 ---
 
 # People and access
@@ -20,7 +23,9 @@ This page names who to ask. It intentionally does not contain secret values.
 
 The decisions file says Yazan and Kevin are GitLab group Owners, and Kevin can grant access. HICP AIDA admin is Yazan plus Kevin; lost admin is Kevin. Kevin already has nearly everything.
 
+::warning
 The only personal credential risk identified is the Jira personal access token behind Kubernetes secret `aida-planning-jira-token` in namespace `aida`. Rotate it away from Yazan's personal account before account deactivation. Do not write the token value into any repository, ticket, or chat.
+::
 
 ## Licences
 

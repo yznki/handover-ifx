@@ -1,7 +1,10 @@
 ---
 title: 'aida-planning CI/CD'
 description: 'aida-planning CI/CD'
-order: 8
+order: 7
+section: 'aida'
+owner: 'Uqba'
+updated: '2026-09-23'
 ---
 
 # aida-planning CI/CD

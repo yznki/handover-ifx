@@ -1,7 +1,10 @@
 ---
 title: 'CVC CI/CD and semantic-release'
 description: 'CVC CI/CD and semantic-release'
-order: 9
+order: 4
+section: 'cvc'
+owner: 'Sandro'
+updated: '2026-09-23'
 ---
 
 # CVC CI/CD and semantic-release

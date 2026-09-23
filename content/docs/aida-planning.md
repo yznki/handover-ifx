@@ -1,7 +1,10 @@
 ---
 title: 'Using aida-planning and the hub'
 description: 'Using aida-planning and the hub'
-order: 13
+order: 6
+section: 'aida'
+owner: 'Uqba'
+updated: '2026-09-23'
 ---
 
 # Using aida-planning and the hub

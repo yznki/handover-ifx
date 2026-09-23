@@ -17,6 +17,11 @@ interface ChecklistItem {
   owner: string;
 
   /**
+   * Group label.
+   */
+  group: string;
+
+  /**
    * Task title.
    */
   title: string;
@@ -28,25 +33,24 @@ interface ChecklistItem {
 }
 
 const checklistItems: ChecklistItem[] = [
-  { identifier: "split-showcase", owner: "Yazan", title: "Split showcase/aida-demo", description: "Create one standalone-fixes merge request and one feat/onboarding-tour merge request, then delete showcase." },
-  { identifier: "promote-aida", owner: "Yazan", title: "Promote AIDA develop", description: "Promote develop 1.6.0-develop.1 to master." },
-  { identifier: "release-cvc", owner: "Sandro", title: "Release CVC 0.3.0 stable", description: "Develop is 24 commits ahead of master; release stable before larger split discussions." },
-  { identifier: "rotate-jira-token", owner: "Kevin", title: "Rotate aida-planning Jira token", description: "Secret name aida-planning-jira-token in namespace aida must stop depending on Yazan's personal Jira PAT." },
-  { identifier: "valibridge-3677", owner: "Uqba", title: "Remember VALIBRIDGE-3677", description: "The API branch bugfix/VALIBRIDGE-3677 is pushed but not merged into develop." },
-  { identifier: "epic-4026", owner: "Sandro", title: "Merge VALIBRIDGE-4026 epic", description: "Project phases epic is not merged to develop in client or API." },
-  { identifier: "fix-cvc-claude", owner: "Sandro", title: "Fix CVC CLAUDE.md consumer list", description: "It wrongly lists AIDA as a CVC consumer." },
-  { identifier: "delete-dead-local", owner: "Yazan", title: "Delete dead local branches and stashes", description: "Remove local-only throwaway branches and stale stashes after the site build." },
-  { identifier: "assistant-workflow", owner: "Uqba", title: "Plan Workflow 04 Assistant", description: "Use aida-plan-workflow plus competitor research; the current POC is a directional draft." },
-  { identifier: "pitch-cvc-split", owner: "Sandro + Uqba", title: "Pitch the CVC split to Kevin", description: "The Turborepo split is Yazan's idea only; present logic before treating it as approved." },
-  { identifier: "playground-expiry", owner: "Uqba (Kevin backup)", title: "Track playground namespace expiry", description: "play-yazi-kamikazi expires around 2026-12-22." },
-  { identifier: "walkthroughs", owner: "Yazan", title: "Run Fri 25 walkthrough sessions", description: "AIDA with Uqba, then CVC and CI/CD with Sandro and Uqba while they do a release." }
+  { identifier: "split-showcase", owner: "Yazan", group: "Release cleanup", title: "Split showcase/aida-demo", description: "Create one standalone-fixes merge request and one feat/onboarding-tour merge request, then delete showcase." },
+  { identifier: "promote-aida", owner: "Yazan", group: "Release cleanup", title: "Promote AIDA develop", description: "Promote develop 1.6.0-develop.1 to master." },
+  { identifier: "release-cvc", owner: "Sandro", group: "CVC", title: "Release CVC 0.3.0 stable", description: "Develop is 24 commits ahead of master; release stable before larger split discussions." },
+  { identifier: "rotate-jira-token", owner: "Kevin", group: "Access", title: "Rotate aida-planning Jira token", description: "Secret name aida-planning-jira-token in namespace aida must stop depending on Yazan's personal Jira PAT." },
+  { identifier: "valibridge-3677", owner: "Uqba", group: "ValiBridge", title: "Remember VALIBRIDGE-3677", description: "The API branch bugfix/VALIBRIDGE-3677 is pushed but not merged into develop." },
+  { identifier: "epic-4026", owner: "Sandro", group: "ValiBridge", title: "Merge VALIBRIDGE-4026 epic", description: "Project phases epic is not merged to develop in client or API." },
+  { identifier: "fix-cvc-claude", owner: "Sandro", group: "CVC", title: "Fix CVC CLAUDE.md consumer list", description: "It wrongly lists AIDA as a CVC consumer." },
+  { identifier: "delete-dead-local", owner: "Yazan", group: "Cleanup", title: "Delete dead local branches and stashes", description: "Remove local-only throwaway branches and stale stashes after the site build." },
+  { identifier: "assistant-workflow", owner: "Uqba", group: "AIDA", title: "Plan Workflow 04 Assistant", description: "Use aida-plan-workflow plus competitor research; the current POC is a directional draft." },
+  { identifier: "pitch-cvc-split", owner: "Sandro + Uqba", group: "CVC", title: "Pitch the CVC split to Kevin", description: "The Turborepo split is Yazan's idea only; present logic before treating it as approved." },
+  { identifier: "playground-expiry", owner: "Uqba (Kevin backup)", group: "Access", title: "Track playground namespace expiry", description: "play-yazi-kamikazi expires around 2026-12-22." },
+  { identifier: "walkthroughs", owner: "Yazan", group: "Handover week", title: "Run Fri 25 walkthrough sessions", description: "AIDA with Uqba, then CVC and CI/CD with Sandro and Uqba while they do a release." }
 ];
 
 const storageKey = "handover-checklist-state";
 const checkedIdentifiers = ref<string[]>([]);
 
-const completionPercentage = computed<number>(() => Math.round((checkedIdentifiers.value.length / checklistItems.length) * 100));
-const checkboxStyle = cva("grid h-6 w-6 place-items-center rounded-full border text-xs transition", {
+const checkboxStyle = cva("grid h-5 w-5 shrink-0 place-items-center rounded-md border text-xs transition", {
   variants: {
     checked: {
       true: "border-violet-500 bg-violet-500 text-paper",
@@ -54,6 +58,16 @@ const checkboxStyle = cva("grid h-6 w-6 place-items-center rounded-full border t
     }
   }
 });
+const rowStyle = cva("grid gap-4 border-b border-ink/10 px-4 py-4 text-left transition hover:bg-white/45 sm:grid-cols-[auto_1fr_auto]", {
+  variants: {
+    checked: {
+      true: "bg-violet-50/45",
+      false: ""
+    }
+  }
+});
+const completionPercentage = computed<number>(() => Math.round((checkedIdentifiers.value.length / checklistItems.length) * 100));
+const groups = computed<string[]>(() => [...new Set(checklistItems.map((item) => item.group))]);
 
 /**
  * Checks whether an item is done.
@@ -62,6 +76,15 @@ const checkboxStyle = cva("grid h-6 w-6 place-items-center rounded-full border t
  */
 function isChecked(identifier: string): boolean {
   return checkedIdentifiers.value.includes(identifier);
+}
+
+/**
+ * Returns checklist items for a group.
+ * @param group - Group label.
+ * @returns Items in the group.
+ */
+function getItemsByGroup(group: string): ChecklistItem[] {
+  return checklistItems.filter((item) => item.group === group);
 }
 
 /**
@@ -80,28 +103,34 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="mx-auto max-w-[1400px] px-4 pb-24 pt-32 md:px-8">
-    <section class="grid gap-8 md:grid-cols-[0.9fr_1.1fr]">
-      <div class="md:sticky md:top-28 md:self-start">
-        <p class="font-mono text-xs uppercase tracking-[0.28em] text-violet-700">Interactive / local only</p>
-        <h1 class="mt-4 text-[clamp(4rem,11vw,10rem)] font-black leading-[0.78] tracking-[-0.09em]">Handover checklist.</h1>
-        <p class="mt-8 max-w-xl text-xl leading-8 text-muted">Checkbox state stays in this browser. No server, no secrets, no pretending this is a project-management system.</p>
-        <div class="mt-10 rounded-[2rem] border border-ink/10 bg-white/45 p-6 shadow-editorial">
-          <div class="font-mono text-7xl font-bold tracking-[-0.08em] text-violet-700">{{ completionPercentage }}%</div>
-          <p class="mt-2 font-mono text-xs uppercase tracking-[0.22em] text-muted">complete in this browser</p>
+  <main class="mx-auto max-w-[1120px] px-4 pb-20 pt-24 sm:px-6">
+    <header class="mb-8 border-b border-ink/10 pb-8">
+      <p class="mb-4 font-mono text-[0.68rem] uppercase tracking-[0.2em] text-violet-700">Local checklist</p>
+      <h1 class="text-[clamp(2rem,4vw,2.75rem)] font-semibold leading-[1.02] tracking-[-0.02em] text-ink">Handover checklist</h1>
+      <p class="mt-4 max-w-[68ch] text-lg leading-8 text-muted">State stays in this browser. No server, no secrets, no pretending this is Jira.</p>
+      <div class="mt-7 max-w-xl">
+        <div class="mb-2 flex items-center justify-between font-mono text-[0.68rem] uppercase tracking-[0.18em] text-ink/45">
+          <span>{{ checkedIdentifiers.length }} of {{ checklistItems.length }} done</span>
+          <span>{{ completionPercentage }}%</span>
+        </div>
+        <div class="h-2 overflow-hidden rounded-full bg-ink/10">
+          <div class="h-full rounded-full bg-violet-500 transition-[width] duration-300" :style="{ width: `${completionPercentage}%` }" />
         </div>
       </div>
+    </header>
 
-      <div class="grid gap-4">
-        <button v-for="item in checklistItems" :key="item.identifier" class="grid gap-4 rounded-[2rem] border border-ink/10 bg-white/45 p-5 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-editorial md:grid-cols-[auto_1fr_auto]" @click="toggleItem(item.identifier)">
-          <span :class="checkboxStyle({ checked: isChecked(item.identifier) })">✓</span>
-          <span>
-            <span class="block text-2xl font-bold tracking-[-0.04em] text-ink">{{ item.title }}</span>
-            <span class="mt-2 block leading-7 text-muted">{{ item.description }}</span>
-          </span>
-          <span class="rounded-full bg-violet-50 px-3 py-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-violet-700">{{ item.owner }}</span>
-        </button>
+    <section v-for="group in groups" :key="group" class="mb-8 overflow-hidden rounded-3xl border border-ink/10 bg-white/30">
+      <div class="border-b border-ink/10 px-4 py-3">
+        <h2 class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink/50">{{ group }}</h2>
       </div>
+      <button v-for="item in getItemsByGroup(group)" :key="item.identifier" :class="rowStyle({ checked: isChecked(item.identifier) })" type="button" @click="toggleItem(item.identifier)">
+        <span :class="checkboxStyle({ checked: isChecked(item.identifier) })">✓</span>
+        <span>
+          <span class="block text-base font-semibold tracking-[-0.01em] text-ink">{{ item.title }}</span>
+          <span class="mt-1 block text-sm leading-6 text-muted">{{ item.description }}</span>
+        </span>
+        <span class="w-fit rounded-full border border-ink/10 bg-paper px-3 py-1 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-ink/55">{{ item.owner }}</span>
+      </button>
     </section>
   </main>
 </template>

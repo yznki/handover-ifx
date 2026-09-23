@@ -3,7 +3,9 @@ import { expect, test, type Page } from "@playwright/test";
 const reviewDirectory = "C:\\Users\\Kiswani\\.copilot\\session-state\\0c59e435-9e11-4684-995a-a38f3769eb8d\\files\\review";
 const pages = [
   { name: "home", path: "/" },
-  { name: "docs", path: "/docs/aida-architecture" },
+  { name: "explore-index", path: "/docs" },
+  { name: "explore-aida-architecture", path: "/docs/aida-architecture" },
+  { name: "explore-cvc", path: "/docs/cvc-now-and-next" },
   { name: "checklist", path: "/checklist" }
 ];
 const viewports = [
@@ -78,6 +80,47 @@ test("minimal home landing works", async ({ page }) => {
   await page.goto("http://127.0.0.1:4173/", { waitUntil: "networkidle" });
   await waitForSettledLocalRendering(page, 2_400);
   await page.screenshot({ path: `${reviewDirectory}\\home-mobile.png`, fullPage: false });
+
+  expect(consoleErrors).toEqual([]);
+});
+
+test("explore pages and checklist render refined chrome", async ({ page }) => {
+  test.setTimeout(120_000);
+  const consoleErrors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") consoleErrors.push(message.text());
+  });
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("http://127.0.0.1:4173/docs", { waitUntil: "networkidle" });
+  await expect(page.getByRole("heading", { name: "The grown-up handover lives here." })).toBeVisible();
+  await waitForSettledLocalRendering(page);
+  await page.screenshot({ path: `${reviewDirectory}\\explore-desktop-index.png`, fullPage: true });
+
+  await page.goto("http://127.0.0.1:4173/docs/aida-architecture", { waitUntil: "networkidle" });
+  await expect(page.getByRole("heading", { name: "AIDA architecture overview" })).toBeVisible();
+  await expect(page.getByText("On this page")).toBeVisible();
+  await waitForSettledLocalRendering(page);
+  await page.screenshot({ path: `${reviewDirectory}\\explore-desktop-aida-architecture.png`, fullPage: true });
+
+  await page.goto("http://127.0.0.1:4173/docs/cvc-now-and-next", { waitUntil: "networkidle" });
+  await expect(page.getByRole("heading", { name: "CVC now and next" })).toBeVisible();
+  await waitForSettledLocalRendering(page);
+  await page.screenshot({ path: `${reviewDirectory}\\explore-desktop-cvc.png`, fullPage: true });
+
+  await page.goto("http://127.0.0.1:4173/checklist", { waitUntil: "networkidle" });
+  await expect(page.getByRole("heading", { name: "Handover checklist" })).toBeVisible();
+  await page.getByRole("button", { name: /Split showcase/ }).click();
+  await waitForSettledLocalRendering(page);
+  await page.screenshot({ path: `${reviewDirectory}\\explore-desktop-checklist.png`, fullPage: true });
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("http://127.0.0.1:4173/docs/aida-architecture", { waitUntil: "networkidle" });
+  await waitForSettledLocalRendering(page);
+  await page.screenshot({ path: `${reviewDirectory}\\explore-mobile-doc.png`, fullPage: false });
+  await page.getByRole("button", { name: "Browse docs" }).click();
+  await waitForSettledLocalRendering(page, 600);
+  await page.screenshot({ path: `${reviewDirectory}\\explore-mobile-drawer.png`, fullPage: false });
 
   expect(consoleErrors).toEqual([]);
 });

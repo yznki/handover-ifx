@@ -1,7 +1,10 @@
 ---
 title: 'AIDA workflows status'
 description: 'AIDA workflows status'
-order: 3
+order: 2
+section: 'aida'
+owner: 'Uqba'
+updated: '2026-09-23'
 ---
 
 # AIDA workflows status

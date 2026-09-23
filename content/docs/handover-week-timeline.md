@@ -1,7 +1,10 @@
 ---
 title: 'Timeline for handover week'
 description: 'Timeline for handover week'
-order: 11
+order: 2
+section: 'start'
+owner: 'Yazan'
+updated: '2026-09-23'
 ---
 
 # Timeline for handover week

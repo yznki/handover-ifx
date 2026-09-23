@@ -5,16 +5,15 @@ import { cva } from "class-variance-authority";
 const isNavigationOpen = ref<boolean>(false);
 
 const navigationLinks = [
-  { label: "Story", to: "/" },
-  { label: "Explore", to: "/docs/aida-architecture" },
+  { label: "Explore", to: "/docs" },
   { label: "Checklist", to: "/checklist" }
 ];
 
-const mobileNavigationStyle = cva("fixed inset-x-4 top-20 z-50 rounded-[2rem] border border-ink/10 bg-paper/95 p-4 shadow-editorial backdrop-blur transition md:hidden", {
+const mobileNavigationStyle = cva("fixed inset-x-4 top-16 z-50 rounded-2xl border border-ink/10 bg-paper/95 p-2 shadow-xl backdrop-blur-xl transition md:hidden", {
   variants: {
     open: {
       true: "translate-y-0 opacity-100",
-      false: "pointer-events-none -translate-y-3 opacity-0"
+      false: "pointer-events-none -translate-y-2 opacity-0"
     }
   }
 });
@@ -30,36 +29,34 @@ function toggleNavigation(): void {
 </script>
 
 <template>
-  <header class="fixed inset-x-0 top-0 z-40 border-b border-ink/10 bg-paper/80 backdrop-blur-xl">
-    <div class="mx-auto grid max-w-[1600px] grid-cols-[1fr_auto] items-center gap-4 px-4 py-3 md:grid-cols-[1fr_auto_1fr] md:px-8">
-      <NuxtLink to="/" class="group flex items-center gap-3">
-        <span class="grid h-9 w-9 place-items-center rounded-full bg-violet-500 font-mono text-xs font-bold text-paper shadow-violet">YK</span>
-        <span class="font-mono text-[0.68rem] uppercase tracking-[0.32em] text-muted transition group-hover:text-violet-700">Infineon handover</span>
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-ink/10 bg-paper/75 backdrop-blur-xl">
+    <div class="mx-auto flex h-14 max-w-[1760px] items-center justify-between px-4 sm:px-6">
+      <NuxtLink to="/" class="group flex items-center gap-3 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-paper">
+        <span class="grid h-7 w-7 place-items-center rounded-lg bg-ink font-mono text-[0.62rem] font-bold text-paper transition group-hover:bg-violet-600">YK</span>
+        <span class="font-mono text-[0.68rem] uppercase tracking-[0.24em] text-ink/55 transition group-hover:text-ink">Infineon handover</span>
       </NuxtLink>
 
-      <nav class="hidden items-center gap-2 rounded-full border border-ink/10 bg-white/40 p-1 md:flex">
-        <NuxtLink v-for="link in navigationLinks" :key="link.to" :to="link.to" class="rounded-full px-4 py-2 font-mono text-xs uppercase tracking-[0.18em] text-muted transition hover:bg-violet-50 hover:text-violet-700">
+      <nav class="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
+        <NuxtLink v-for="link in navigationLinks" :key="link.to" :to="link.to" class="rounded-full px-3 py-2 text-sm font-medium text-muted transition hover:bg-ink/[0.04] hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500">
           {{ link.label }}
         </NuxtLink>
+        <button data-command-palette-trigger class="ml-2 inline-flex items-center gap-3 rounded-full border border-ink/10 bg-white/35 px-3 py-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-muted transition hover:border-violet-300 hover:bg-white/70 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500" type="button">
+          <span>Search docs…</span>
+          <kbd class="rounded-md border border-ink/10 bg-paper px-1.5 py-0.5 text-[0.62rem]">Ctrl K</kbd>
+        </button>
       </nav>
 
-      <div class="hidden justify-end md:flex">
-        <button data-command-palette-trigger class="rounded-full border border-ink/10 px-4 py-2 font-mono text-xs uppercase tracking-[0.18em] text-muted transition hover:border-violet-500 hover:text-violet-700">
-          Ctrl K
-        </button>
-      </div>
-
-      <button class="rounded-full border border-ink/10 px-4 py-2 font-mono text-xs uppercase tracking-[0.18em] md:hidden" @click="toggleNavigation">
+      <button class="rounded-full border border-ink/10 px-3 py-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted md:hidden" type="button" @click="toggleNavigation">
         Menu
       </button>
     </div>
 
-    <nav :class="resolvedMobileNavigationStyle">
-      <NuxtLink v-for="link in navigationLinks" :key="link.to" :to="link.to" class="block rounded-2xl px-4 py-3 font-mono text-xs uppercase tracking-[0.18em] text-muted hover:bg-violet-50 hover:text-violet-700" @click="toggleNavigation">
+    <nav :class="resolvedMobileNavigationStyle" aria-label="Mobile navigation">
+      <NuxtLink v-for="link in navigationLinks" :key="link.to" :to="link.to" class="block rounded-xl px-4 py-3 text-sm font-medium text-muted hover:bg-violet-50 hover:text-violet-700" @click="toggleNavigation">
         {{ link.label }}
       </NuxtLink>
-      <button data-command-palette-trigger class="mt-2 w-full rounded-2xl border border-ink/10 px-4 py-3 text-left font-mono text-xs uppercase tracking-[0.18em] text-muted">
-        Search content
+      <button data-command-palette-trigger class="mt-1 w-full rounded-xl border border-ink/10 px-4 py-3 text-left font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted" type="button">
+        Search docs… Ctrl K
       </button>
     </nav>
   </header>

@@ -2,12 +2,10 @@
 import { computed } from "vue";
 import SiteHeader from "~/components/SiteHeader.vue";
 import CommandPalette from "~/components/Interactive/CommandPalette.vue";
-import CustomCursor from "~/components/Interactive/CustomCursor.client.vue";
 
 const route = useRoute();
 
 const showSiteHeader = computed<boolean>(() => route.path !== "/");
-const showCustomCursor = computed<boolean>(() => route.path !== "/");
 </script>
 
 <template>
@@ -15,8 +13,5 @@ const showCustomCursor = computed<boolean>(() => route.path !== "/");
     <SiteHeader v-if="showSiteHeader" />
     <slot />
     <CommandPalette />
-    <ClientOnly>
-      <CustomCursor v-if="showCustomCursor" />
-    </ClientOnly>
   </div>
 </template>

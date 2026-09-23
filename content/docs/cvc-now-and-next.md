@@ -1,7 +1,10 @@
 ---
 title: 'CVC now and next'
 description: 'CVC now and next'
-order: 14
+order: 1
+section: 'cvc'
+owner: 'Sandro + Uqba'
+updated: '2026-09-23'
 ---
 
 # CVC now and next

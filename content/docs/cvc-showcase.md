@@ -1,7 +1,10 @@
 ---
 title: 'CVC showcase'
 description: 'CVC showcase'
-order: 6
+order: 3
+section: 'cvc'
+owner: 'Sandro'
+updated: '2026-09-23'
 ---
 
 # CVC showcase

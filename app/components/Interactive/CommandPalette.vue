@@ -20,7 +20,6 @@ interface SearchSection {
    * Section content text.
    */
   content: string;
-
 }
 
 const isOpen = ref<boolean>(false);
@@ -97,15 +96,15 @@ onMounted(() => {
 
 <template>
   <div :class="resolvedPaletteStyle" @click.self="closePalette">
-    <section class="mx-auto w-full max-w-3xl overflow-hidden rounded-[2rem] border border-ink/10 bg-paper shadow-editorial">
+    <section class="mx-auto w-full max-w-2xl overflow-hidden rounded-3xl border border-ink/10 bg-paper shadow-2xl">
       <div class="border-b border-ink/10 p-4">
         <label class="sr-only" for="command-search">Search handover content</label>
-        <input id="command-search" v-model="searchTerm" class="w-full bg-transparent font-mono text-sm uppercase tracking-[0.16em] outline-none placeholder:text-muted" placeholder="Search AIDA, CVC, CI/CD, people..." />
+        <input id="command-search" v-model="searchTerm" class="w-full bg-transparent text-base outline-none placeholder:text-muted" placeholder="Search docs… Ctrl K" />
       </div>
       <div class="max-h-[60vh] overflow-y-auto p-2">
-        <button v-for="section in filteredSections" :key="section.id" class="group grid w-full gap-2 rounded-[1.4rem] p-4 text-left transition hover:bg-violet-50" @click="selectSection(section.id)">
-          <span class="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-violet-700">{{ section.id }}</span>
-          <span class="text-xl font-semibold tracking-[-0.04em] text-ink">{{ section.title }}</span>
+        <button v-for="section in filteredSections" :key="section.id" class="group grid w-full gap-2 rounded-2xl p-4 text-left transition hover:bg-violet-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500" type="button" @click="selectSection(section.id)">
+          <span class="font-mono text-[0.64rem] uppercase tracking-[0.18em] text-violet-700">{{ section.id }}</span>
+          <span class="text-base font-semibold tracking-[-0.01em] text-ink">{{ section.title }}</span>
           <span class="line-clamp-2 text-sm leading-6 text-muted">{{ section.content }}</span>
         </button>
         <p v-if="filteredSections.length === 0" class="p-8 text-center font-mono text-xs uppercase tracking-[0.2em] text-muted">No matching page.</p>
@@ -113,4 +112,3 @@ onMounted(() => {
     </section>
   </div>
 </template>
-

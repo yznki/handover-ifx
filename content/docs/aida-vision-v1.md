@@ -1,7 +1,10 @@
 ---
 title: 'AIDA vision and V1 definition'
 description: 'AIDA vision and V1 definition'
-order: 2
+order: 1
+section: 'aida'
+owner: 'Uqba'
+updated: '2026-09-23'
 ---
 
 # AIDA vision and V1 definition

@@ -1,12 +1,17 @@
 ---
 title: 'Deploy to HICP by hand'
 description: 'Deploy to HICP by hand'
-order: 4
+order: 5
+section: 'aida'
+owner: 'Uqba'
+updated: '2026-09-23'
 ---
 
 # Deploy to HICP by hand
 
+::warning
 This is a runbook for understanding the deployment shape. It is not a command to paste blindly into a terminal. Use the normal CI/CD pipeline when possible. If a manual deployment is needed, use the same structure as the pipelines and never write secret values into this repository, a ticket, or a chat.
+::
 
 ## Namespaces and clusters
 
@@ -27,7 +32,9 @@ The pipeline login pattern is:
 oc login --token=$env:OC_SA_TOKEN --server=$env:OC_SERVER --insecure-skip-tls-verify
 ```
 
+::note
 That insecure TLS flag is a known current pipeline quirk. It is documented because it exists, not because it is a recommendation.
+::
 
 ## Image pull secret pattern
 
@@ -42,7 +49,9 @@ oc create secret docker-registry artifactory `
   --dry-run=client -o yaml | oc apply -f -
 ```
 
+::warning
 Do not paste real usernames, passwords, or tokens into documentation. If the command fails, ask Kevin or the application owner for access rather than copying credentials into a workaround.
+::
 
 ## Helm deploy pattern
 

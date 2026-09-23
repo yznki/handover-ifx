@@ -1,7 +1,10 @@
 ---
 title: 'AIDA CI/CD'
 description: 'AIDA CI/CD'
-order: 7
+order: 4
+section: 'aida'
+owner: 'Uqba'
+updated: '2026-09-23'
 ---
 
 # AIDA CI/CD
@@ -22,7 +25,9 @@ This page documents the current AIDA pipeline only. It does not propose a future
 | `ARTIFACTORY_TOKEN` | Build argument used by Docker build jobs. |
 | `LITELLM_BASE_URL`, `LITELLM_API_KEY` | Application AI configuration passed into Kubernetes secret creation. |
 
+::warning
 No secret values belong in documentation.
+::
 
 ## Jobs
 
@@ -43,7 +48,9 @@ AIDA semantic-release uses `master` for stable releases and `develop` for prerel
 
 ## Deploy flow
 
+::warning
 The deploy jobs use `alpine/helm`, install the OpenShift client, run `oc login --token=$OC_SA_TOKEN --server=$OC_SERVER --insecure-skip-tls-verify`, create or update the Artifactory image pull secret, create or update `aida-secrets` from LiteLLM variable names, check required auth/database secrets, and run `helm upgrade --install` with the environment values file and image tag.
+::
 
 ## Known quirks
 
@@ -61,4 +68,6 @@ Read deploy logs in order. First confirm `oc login` succeeds. Then confirm image
 
 ## What not to document
 
+::warning
 Do not paste service account tokens, LiteLLM keys, Docker passwords, database passwords, or OpenShift server secrets into the repository. This page deliberately lists variable names and purposes only. If a developer lacks access, the handover answer is to ask Kevin.
+::

@@ -1,7 +1,10 @@
 ---
 title: 'CVC consumers'
 description: 'CVC consumers'
-order: 5
+order: 2
+section: 'cvc'
+owner: 'Sandro'
+updated: '2026-09-23'
 ---
 
 # CVC consumers

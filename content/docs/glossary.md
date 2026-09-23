@@ -1,7 +1,10 @@
 ---
 title: 'Glossary'
 description: 'Glossary'
-order: 19
+order: 1
+section: 'reference'
+owner: 'Team'
+updated: '2026-09-23'
 ---
 
 # Glossary
