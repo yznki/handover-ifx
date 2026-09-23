@@ -1,6 +1,6 @@
 ---
 title: 'aida-planning CI/CD'
-description: 'aida-planning CI/CD'
+description: 'The planning hub pipeline, container build, release behavior, and OpenShift deployment shape.'
 order: 7
 section: 'aida'
 owner: 'Uqba'

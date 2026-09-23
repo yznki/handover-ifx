@@ -84,6 +84,12 @@ const previousPage = computed<DocumentationPageMetadata | null>(() => currentPag
 const nextPage = computed<DocumentationPageMetadata | null>(() => currentPageIndex.value >= 0 ? navigationDocuments.value[currentPageIndex.value + 1] || null : null);
 const tableOfContentsLinks = computed<TableOfContentsLink[]>(() => typedPage.value?.body?.toc?.links || []);
 const readingTime = computed<string>(() => calculateReadingTime(typedPage.value?.body?.value || typedPage.value?.description || ""));
+const pageDescription = computed<string>(() => {
+  const description = typedPage.value?.description?.trim() || "";
+  const title = typedPage.value?.title?.trim() || "";
+
+  return description && description !== title ? description : "";
+});
 
 /**
  * Opens the mobile sidebar drawer.
@@ -119,7 +125,7 @@ function closeSidebar(): void {
 
         <header class="mb-10 border-b border-ink/10 pb-8">
           <h1 class="max-w-[12ch] text-[clamp(2rem,4vw,2.75rem)] font-semibold leading-[1.02] tracking-[-0.02em] text-ink">{{ typedPage.title }}</h1>
-          <p v-if="typedPage.description" class="mt-4 max-w-[68ch] text-lg leading-8 text-muted">{{ typedPage.description }}</p>
+          <p v-if="pageDescription" class="mt-4 max-w-[68ch] text-lg leading-8 text-muted">{{ pageDescription }}</p>
         </header>
 
         <div class="content-prose max-w-[72ch]">

@@ -1,6 +1,6 @@
 ---
 title: 'AIDA vision and V1 definition'
-description: 'AIDA vision and V1 definition'
+description: 'The product intent, version-one boundary, and measurable planning scope for AIDA.'
 order: 1
 section: 'aida'
 owner: 'Uqba'

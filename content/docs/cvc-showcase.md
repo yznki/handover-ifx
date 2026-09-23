@@ -1,6 +1,6 @@
 ---
 title: 'CVC showcase'
-description: 'CVC showcase'
+description: 'What the showcase branch contains, why it should be split, and how to avoid release confusion.'
 order: 3
 section: 'cvc'
 owner: 'Sandro'

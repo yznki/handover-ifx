@@ -1,6 +1,6 @@
 ---
 title: 'AIDA workflows status'
-description: 'AIDA workflows status'
+description: 'What is planned, implemented, drafted, or still unresolved across the AIDA workflow set.'
 order: 2
 section: 'aida'
 owner: 'Uqba'

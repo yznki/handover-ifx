@@ -1,6 +1,6 @@
 ---
 title: 'ValiBridge status'
-description: 'ValiBridge status'
+description: 'A short status handoff for ValiBridge items the team already mostly knows.'
 order: 1
 section: 'valibridge'
 owner: 'Uqba + Sandro'

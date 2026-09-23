@@ -1,6 +1,6 @@
 ---
 title: 'How my mind works'
-description: 'How my mind works'
+description: 'The operating model for debugging, AI use, trade-offs, and review decisions after Yazan leaves.'
 order: 1
 section: 'start'
 owner: 'Sandro + Uqba'

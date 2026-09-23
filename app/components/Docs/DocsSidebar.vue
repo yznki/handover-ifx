@@ -58,7 +58,7 @@ const sectionDotStyle = cva("h-2 w-2 rounded-full", {
     }
   }
 });
-const navigationLinkStyle = cva("group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm leading-5 text-muted transition hover:bg-ink/[0.035] hover:text-ink", {
+const navigationLinkStyle = cva("group relative flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[0.76rem] leading-4 text-muted transition hover:bg-ink/[0.035] hover:text-ink", {
   variants: {
     active: {
       true: "bg-violet-50 text-ink shadow-[inset_3px_0_0_#6D3BFF]",
@@ -94,13 +94,13 @@ function closeDrawer(): void {
 
 <template>
   <aside class="hidden xl:block">
-    <nav class="sticky top-20 max-h-[calc(100svh-5rem)] overflow-y-auto border-r border-ink/10 pr-5">
-      <NuxtLink to="/docs" class="mb-6 flex items-center gap-3 rounded-2xl border border-ink/10 bg-white/45 px-4 py-3 text-sm font-semibold tracking-[-0.01em] text-ink transition hover:border-violet-300 hover:bg-violet-50">
-        <span class="grid h-8 w-8 place-items-center rounded-xl bg-ink text-xs text-paper">↗</span>
+    <nav class="sticky top-20 max-h-[calc(100svh-6rem)] overflow-y-auto border-r border-ink/10 pr-4 [scrollbar-width:thin]">
+      <NuxtLink to="/docs" class="mb-3 flex items-center gap-3 rounded-2xl border border-ink/10 bg-white/45 px-3 py-2 text-sm font-semibold tracking-[-0.01em] text-ink transition hover:border-violet-300 hover:bg-violet-50">
+        <span class="grid h-7 w-7 place-items-center rounded-xl bg-ink text-xs text-paper">↗</span>
         Explore index
       </NuxtLink>
-      <section v-for="section in documentationSections" :key="section.identifier" class="mb-7">
-        <p class="mb-2 flex items-center gap-2 px-3 font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink/45">
+      <section v-for="section in documentationSections" :key="section.identifier" class="mb-2.5">
+        <p class="mb-1 flex items-center gap-2 px-2.5 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-ink/45">
           <span :class="sectionDotStyle({ section: section.identifier })" />
           {{ section.label }}
         </p>

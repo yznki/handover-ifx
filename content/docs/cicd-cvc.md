@@ -1,6 +1,6 @@
 ---
 title: 'CVC CI/CD and semantic-release'
-description: 'CVC CI/CD and semantic-release'
+description: 'How CVC verifies, releases, publishes packages, and deploys the showcase from GitLab CI.'
 order: 4
 section: 'cvc'
 owner: 'Sandro'

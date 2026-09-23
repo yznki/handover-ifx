@@ -1,6 +1,6 @@
 ---
 title: 'Deploy to HICP by hand'
-description: 'Deploy to HICP by hand'
+description: 'A manual deployment reference for understanding the same OpenShift and Helm shape used by CI/CD.'
 order: 5
 section: 'aida'
 owner: 'Uqba'

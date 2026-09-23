@@ -1,6 +1,6 @@
 ---
 title: 'People and access'
-description: 'People and access'
+description: 'Who owns what after the handover and which access topics need careful handling.'
 order: 3
 section: 'start'
 owner: 'Kevin'

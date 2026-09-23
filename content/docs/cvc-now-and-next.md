@@ -1,6 +1,6 @@
 ---
 title: 'CVC now and next'
-description: 'CVC now and next'
+description: 'The current CVC package shape plus Yazan’s unapproved split idea and migration path.'
 order: 1
 section: 'cvc'
 owner: 'Sandro + Uqba'

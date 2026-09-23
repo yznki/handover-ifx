@@ -1,6 +1,6 @@
 ---
 title: 'What to do when semantic-release fails'
-description: 'What to do when semantic-release fails'
+description: 'A failure-first checklist for semantic-release, branch rules, tags, package publishing, and deploy fallout.'
 order: 5
 section: 'cvc'
 owner: 'Sandro'

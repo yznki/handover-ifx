@@ -1,6 +1,6 @@
 ---
 title: 'CVC consumers'
-description: 'CVC consumers'
+description: 'Which applications rely on CVC today and what that means for release safety.'
 order: 2
 section: 'cvc'
 owner: 'Sandro'

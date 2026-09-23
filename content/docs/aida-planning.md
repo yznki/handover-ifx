@@ -1,6 +1,6 @@
 ---
 title: 'Using aida-planning and the hub'
-description: 'Using aida-planning and the hub'
+description: 'How the planning repository, hub service, and assistant skills turn workflow decisions into implementation tickets.'
 order: 6
 section: 'aida'
 owner: 'Uqba'

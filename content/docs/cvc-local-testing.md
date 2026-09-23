@@ -1,6 +1,6 @@
 ---
 title: 'Test a CVC change inside a consumer app'
-description: 'Test a CVC change inside a consumer app'
+description: 'A safe local loop for validating CVC changes inside real consuming applications.'
 order: 6
 section: 'cvc'
 owner: 'Sandro'

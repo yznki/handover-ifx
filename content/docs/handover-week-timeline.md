@@ -1,6 +1,6 @@
 ---
 title: 'Timeline for handover week'
-description: 'Timeline for handover week'
+description: 'The handover-week sequence, walkthrough timing, cleanup window, and last-day boundary.'
 order: 2
 section: 'start'
 owner: 'Yazan'

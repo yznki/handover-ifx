@@ -65,7 +65,7 @@ function closeSidebar(): void {
         <NuxtLink v-for="section in sectionCards" :key="section.identifier" :to="section.pages[0]?.path || '/docs'" class="group rounded-3xl border border-ink/10 bg-white/35 p-5 transition hover:-translate-y-0.5 hover:border-violet-300 hover:bg-white/60">
           <div class="mb-4 flex items-center justify-between">
             <span :class="sectionDotStyle({ section: section.identifier })" />
-            <span class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ink/40">{{ section.pages.length }} pages</span>
+            <span class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ink/40">{{ section.pages.length }} {{ section.pages.length === 1 ? "page" : "pages" }}</span>
           </div>
           <h2 class="text-xl font-semibold tracking-[-0.02em] text-ink">{{ section.label }}</h2>
           <p class="mt-2 min-h-14 text-sm leading-6 text-muted">{{ section.description }}</p>

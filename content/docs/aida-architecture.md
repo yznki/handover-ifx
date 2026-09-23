@@ -1,6 +1,6 @@
 ---
 title: 'AIDA architecture overview'
-description: 'AIDA architecture overview'
+description: 'How AIDA moves from uploaded CSV data through shared logic, server services, and the Nuxt interface.'
 order: 3
 section: 'aida'
 owner: 'Uqba'
@@ -44,6 +44,10 @@ Workspace autosave watches multiple stores deeply, which is a future performance
 When adding or changing a plot type, expect to touch shared plot types, registry, role definitions, builders, server validation, AI prompt/schema descriptions, and frontend selection UI. When adding an endpoint, update the route, validation schema, controller/service, shared API types, and client API service. When changing transforms, confirm row counts and column vectors stay aligned.
 
 ## Known architecture landmines
+
+::warning
+These are current architecture constraints to check before changing cross-layer code. They are not theoretical cleanup items; each one can change how a feature behaves in production.
+::
 
 | Landmine | Consequence |
 | --- | --- |

@@ -1,6 +1,6 @@
 ---
 title: 'Glossary'
-description: 'Glossary'
+description: 'Plain-language definitions for the handover terms that come up across AIDA, CVC, and ValiBridge.'
 order: 1
 section: 'reference'
 owner: 'Team'

@@ -1,6 +1,6 @@
 ---
 title: 'Unfinished business'
-description: 'Unfinished business'
+description: 'The remaining handover tasks, owners, blockers, and the order that reduces release and access risk.'
 order: 4
 section: 'start'
 owner: 'Sandro + Uqba'
@@ -10,6 +10,10 @@ updated: '2026-09-23'
 # Unfinished business
 
 This page expands the interactive checklist with context. It is grounded in the handover decisions file and avoids inventing owners or missing details.
+
+::warning
+The planning Jira token is tied to Yazan's personal Jira PAT according to the decisions file. Rotate the secret named `aida-planning-jira-token` in namespace `aida`; do not write the token value anywhere.
+::
 
 | Item | Owner | Context |
 | --- | --- | --- |

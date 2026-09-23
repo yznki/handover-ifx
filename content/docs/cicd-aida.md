@@ -1,6 +1,6 @@
 ---
 title: 'AIDA CI/CD'
-description: 'AIDA CI/CD'
+description: 'The current AIDA pipeline stages, release rules, deploy flow, and failure-debugging path.'
 order: 4
 section: 'aida'
 owner: 'Uqba'
@@ -54,8 +54,11 @@ The deploy jobs use `alpine/helm`, install the OpenShift client, run `oc login -
 
 ## Known quirks
 
+::warning
+Deployment currently uses `oc login --insecure-skip-tls-verify`. This documents the current pipeline behavior only; it is not a recommendation to broaden manual use of the flag.
+::
+
 - The verify stage has lint and typecheck, but no test job.
-- Deployment currently uses `oc login --insecure-skip-tls-verify`.
 - AIDA data storage is in-memory in the app; deployment scaling above one replica would need careful architecture work, not just a Helm value change.
 
 ## Debugging a failed release
