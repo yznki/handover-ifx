@@ -1,14 +1,23 @@
 ---
-title: 'How to use aida-planning.'
-description: 'How to use aida-planning.'
-chapter: '05 / AIDA-PLANNING'
+title: "How to use aida-planning."
+description: "The planning workspace and skills."
+chapter: "05 / AIDA-PLANNING"
 order: 5
-note: 'The memory is the product.'
-links: [{ label: "Using aida-planning", to: "/docs/aida-planning" }, { label: "People", to: "/docs/people-and-access" }]
+note: "The memory is the product."
+beats:
+  - statement: "Start with CONTEXT.md."
+    support: "It is memory, not automatic authority. Verify code facts in AIDA."
+    visual: "context-book"
+  - statement: "The hub is a read-only lens."
+    support: "Deployed view is for the team; editing happens locally in markdown."
+    visual: "hub-frame"
+  - statement: "Tickets and epics are files."
+    support: "TICKET-SCHEMA.md keeps AI sessions and humans on one format."
+    visual: "ticket-grid"
+  - statement: "Use the skills deliberately."
+    support: "aida-plan-workflow, aida-ticket, and aida-code-review are the durable workflows."
+    visual: "skill-row"
+links:
+  - label: "Using aida-planning"
+    to: "/docs/aida-planning"
 ---
-
-Start in `CONTEXT.md`. It is the continuity thread, not a substitute for reading code. Then use `V1-DEFINITION.md`, `PRD.md`, workflow decisions, gap analyses, tickets, epics, and the hub.
-
-The hub is deployed read-only at `aida-planning.icp.infineon.com`. Editing happens locally. The file format is the source of truth, so AI sessions and humans can work on the same markdown without inventing a second database.
-
-The skills are part of the workflow: `aida-plan-workflow` for new workflow planning, `aida-ticket` for loading implementation ticket context, and `aida-code-review` for merge request review with the codebase-map.

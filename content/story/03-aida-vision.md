@@ -1,14 +1,25 @@
 ---
-title: 'AIDA is a data-first plotting engine.'
-description: 'AIDA is a data-first plotting engine.'
-chapter: '03 / AIDA VISION'
+title: "AIDA is a data-first plotting engine."
+description: "The product vision and V1 loop."
+chapter: "03 / AIDA VISION"
 order: 3
-note: 'Excel ritual out. Data-first flow in.'
-links: [{ label: "Planning workspace", to: "/docs/aida-planning" }, { label: "AIDA architecture", to: "/docs/aida-architecture" }]
+note: "Excel ritual out. Data-first loop in."
+beats:
+  - statement: "AIDA replaces the Excel pivot-chart ritual."
+    support: "Raw measurement files in, publication-ready plots out."
+    visual: "aida-loop"
+  - statement: "The engine is logic first, LLM last."
+    support: "Deterministic logic handles what it can; the LLM handles ambiguity through validated tools."
+    visual: "logic-first"
+  - statement: "V1 means one real analysis end to end."
+    support: "Ingest, transform, plot, refine, export, without falling back to Excel."
+    visual: "v1-track"
+  - statement: "Assistant is next and un-grilled."
+    support: "Uqba plans workflow 04 with aida-plan-workflow and competitor research."
+    visual: "status-strip"
+links:
+  - label: "AIDA vision and V1"
+    to: "/docs/aida-vision-v1"
+  - label: "Workflow status"
+    to: "/docs/aida-workflows-status"
 ---
-
-AIDA is Infineon's Veritas Post-Si plotting tool. The product vision from the planning workspace is one plotting engine across several surfaces: standalone web app now, ValiBridge embedding later, and other surfaces only when the plan supports them.
-
-The planning finish line for version 1 is one engineer completing a real project analysis in AIDA: raw measurement files in, publication-ready plots out, faster than the Excel routine, with every design decision planned, ticketed, and grounded in the real codebase.
-
-The workflow set is ingestion, transform, plotting, assistant, export and workspace, plus platform and identity. Ingestion, transform, and plotting have been planned and ticketed. Assistant is next and should be planned by Uqba with `aida-plan-workflow` and competitor research.

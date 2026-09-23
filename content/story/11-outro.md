@@ -1,12 +1,22 @@
 ---
-title: 'Hand it over.'
-description: 'Hand it over.'
-chapter: '11 / OUTRO'
+title: "Hand it over."
+description: "The final handoff."
+chapter: "11 / OUTRO"
 order: 11
-note: 'See you in the WhatsApp group.'
-links: [{ label: "Checklist", to: "/checklist" }, { label: "Docs", to: "/docs/aida-architecture" }]
+note: "See you in the WhatsApp group."
+beats:
+  - statement: "This is not a farewell speech."
+    support: "It is a map for what still needs judgment."
+    visual: "outro-map"
+  - statement: "The object splits in two."
+    support: "The work hands over to Uqba and Sandro."
+    visual: "handover-split"
+  - statement: "After Monday 2026-09-28, use the WhatsApp group."
+    support: "That is the verified contact path from the decisions file."
+    visual: "whatsapp-line"
+links:
+  - label: "Checklist"
+    to: "/checklist"
+  - label: "Explore docs"
+    to: "/docs/aida-architecture"
 ---
-
-The goal is not for this to sound like a farewell speech. The goal is for Uqba and Sandro to know where the work lives, how I thought about it, where the current pipelines are, what still needs cleanup, and when to ask Kevin.
-
-After Monday 2026-09-28, contact me through the WhatsApp group.

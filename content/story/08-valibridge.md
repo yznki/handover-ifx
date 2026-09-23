@@ -1,14 +1,20 @@
 ---
-title: 'The quick ValiBridge bit.'
-description: 'The quick ValiBridge bit.'
-chapter: '08 / VALIBRIDGE'
+title: "The quick ValiBridge bit."
+description: "Short ValiBridge status."
+chapter: "08 / VALIBRIDGE"
 order: 8
-note: 'Short because the team knows it.'
-links: [{ label: "ValiBridge status", to: "/docs/valibridge" }]
+note: "Short because the team knows it."
+beats:
+  - statement: "Keep ValiBridge short."
+    support: "Uqba and Sandro already know the domain."
+    visual: "bridge-minimal"
+  - statement: "VALIBRIDGE-4026 is not merged to develop."
+    support: "Client and API project phases work still sits in the epic."
+    visual: "bridge-epic"
+  - statement: "VALIBRIDGE-3677 is pushed but unmerged."
+    support: "Remind the team about duplicate user registration."
+    visual: "warning-ticket"
+links:
+  - label: "ValiBridge status"
+    to: "/docs/valibridge"
 ---
-
-ValiBridge stays short because Uqba and Sandro already know it.
-
-The project phases epic VALIBRIDGE-4026 is not merged to develop in client or API. Sandro owns it and knows what to do. The API branch `bugfix/VALIBRIDGE-3677` for duplicate user registration is pushed but not merged into develop, so the team needs the reminder.
-
-Local feature branches and stashes can be cleaned up after the handover site is built.

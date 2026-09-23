@@ -2,6 +2,7 @@
 import { computed, ref } from "vue";
 import { TresCanvas } from "@tresjs/core";
 import { Vector3 } from "three";
+import { cva } from "class-variance-authority";
 
 /**
  * A generated particle cube position.
@@ -23,10 +24,32 @@ interface ParticlePosition {
   scale: Vector3;
 }
 
+/**
+ * Procedural hero object properties.
+ */
+interface HeroObjectProperties {
+  /**
+   * Whether the object is displayed as a small recurring story motif.
+   */
+  floating?: boolean;
+}
+
+const properties = withDefaults(defineProps<HeroObjectProperties>(), {
+  floating: false
+});
+
 const shapeProgress = ref<number>(0);
 const particleCount = 84;
 const cameraPosition = new Vector3(0, 0, 5);
 const lightPosition = new Vector3(2, 4, 6);
+const rootStyle = cva("relative overflow-hidden", {
+  variants: {
+    floating: {
+      true: "h-[22rem] rounded-none border-0 bg-transparent shadow-none",
+      false: "h-[34rem] rounded-[2.5rem] border border-ink/10 bg-gradient-to-br from-violet-50 via-paper to-white shadow-editorial"
+    }
+  }
+});
 
 const particles = computed<ParticlePosition[]>(() => Array.from({ length: particleCount }, (_unusedValue, particleIndex) => {
   const normalizedIndex = particleIndex / particleCount;
@@ -61,7 +84,7 @@ defineExpose({ setShapeProgress });
 </script>
 
 <template>
-  <div class="relative h-[34rem] overflow-hidden rounded-[2.5rem] border border-ink/10 bg-gradient-to-br from-violet-50 via-paper to-white shadow-editorial">
+  <div :class="rootStyle({ floating: properties.floating })">
     <TresCanvas clear-color="#F6F4EF" class="h-full w-full">
       <TresPerspectiveCamera :position="cameraPosition" :look-at="new Vector3(0, 0, 0)" />
       <TresAmbientLight :intensity="1.4" />
@@ -73,9 +96,9 @@ defineExpose({ setShapeProgress });
         </TresMesh>
       </TresGroup>
     </TresCanvas>
-    <div class="pointer-events-none absolute inset-0 grid place-items-center opacity-25">
+    <div v-if="!properties.floating" class="pointer-events-none absolute inset-0 grid place-items-center opacity-25">
       <div class="text-[18rem] font-black leading-none tracking-[-0.16em] text-violet-500 blur-[1px]">Y</div>
     </div>
-    <div class="absolute bottom-5 left-5 rounded-full bg-paper/75 px-4 py-2 font-mono text-[0.65rem] uppercase tracking-[0.24em] text-violet-700 backdrop-blur">Y → plot → blocks → bridge → handover</div>
+    <div v-if="!properties.floating" class="absolute bottom-5 left-5 rounded-full bg-paper/75 px-4 py-2 font-mono text-[0.65rem] uppercase tracking-[0.24em] text-violet-700 backdrop-blur">Y → plot → blocks → bridge → handover</div>
   </div>
 </template>

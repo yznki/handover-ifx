@@ -1,16 +1,28 @@
 ---
-title: 'Current pipelines only.'
-description: 'Current pipelines only.'
-chapter: '06 / CI/CD'
+title: "Current pipelines only."
+description: "CI/CD as it works now."
+chapter: "06 / CI/CD"
 order: 6
-note: 'No future roadmap here.'
-links: [{ label: "AIDA CI/CD", to: "/docs/cicd-aida" }, { label: "Planning CI/CD", to: "/docs/cicd-planning" }, { label: "CVC CI/CD", to: "/docs/cicd-cvc" }]
+note: "No roadmap in this chapter."
+beats:
+  - statement: "AIDA deploys through six current stages."
+    support: "verify → build → docker-build → semantic-release → docker-push → oc-deploy."
+    visual: "pipeline-aida"
+  - statement: "develop is prerelease. master is stable."
+    support: "Semantic-release decides versions from commit history."
+    visual: "branch-release"
+  - statement: "aida-planning is master-only."
+    support: "It deploys the read-only hub to namespace aida."
+    visual: "pipeline-planning"
+  - statement: "CVC releases package and showcase separately."
+    support: "Showcase deployment waits for SHOWCASE_DEPLOY_ENABLED=true."
+    visual: "pipeline-cvc"
+  - statement: "Known quirks are factual."
+    support: "AIDA verify has no test job; deployments use oc login with insecure skip TLS verify."
+    visual: "quirks-box"
+links:
+  - label: "AIDA CI/CD"
+    to: "/docs/cicd-aida"
+  - label: "CVC CI/CD"
+    to: "/docs/cicd-cvc"
 ---
-
-AIDA runs verify, build, Docker validation, semantic release, Docker push, and OpenShift deploy. The verify stage runs lint and typecheck; the known quirk is that verify has no test job.
-
-aida-planning builds the hub, validates Docker on merge requests, releases only from master, pushes the image, and deploys the read-only hub to the shared `aida` namespace.
-
-CVC installs, validates, tests, builds, releases the npm package, and conditionally builds and deploys the showcase. Showcase deployment is gated by `SHOWCASE_DEPLOY_ENABLED=true`.
-
-A known current deployment quirk across these pipelines is `oc login --insecure-skip-tls-verify`.

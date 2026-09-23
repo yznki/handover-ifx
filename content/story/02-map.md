@@ -1,14 +1,28 @@
 ---
-title: 'The repository map.'
-description: 'The repository map.'
-chapter: '02 / MAP'
+title: "The repository map."
+description: "How the handover repositories connect."
+chapter: "02 / MAP"
 order: 2
-note: 'The work is connected.'
-links: [{ label: "AIDA architecture", to: "/docs/aida-architecture" }, { label: "ValiBridge status", to: "/docs/valibridge" }]
+note: "AIDA does not consume CVC."
+beats:
+  - statement: "There are five active centers of gravity."
+    support: "AIDA, aida-planning, common-vue-components, valibridge-client, and valibridge-api."
+    visual: "repo-map"
+  - statement: "CVC feeds seven verified consumers, not AIDA."
+    support: "valibridge-client, lost-client, tim-client, jira-ai-client, instruments-client, editable-table, and legacy apps."
+    visual: "cvc-consumers"
+  - statement: "aida-planning is the memory layer for AIDA."
+    support: "It holds PRD, V1 definition, workflow docs, epics, tickets, glossary, and the hub."
+    visual: "planning-link"
+  - statement: "ValiBridge has a client/API pair."
+    support: "The project phases epic crosses both repositories."
+    visual: "bridge-link"
+  - statement: "Archived Bitbucket/local branches are cleanup, not future homes."
+    support: "Anything not pushed and not deployed can usually disappear after the site build."
+    visual: "archive-fade"
+links:
+  - label: "CVC consumers"
+    to: "/docs/cvc-consumers"
+  - label: "ValiBridge status"
+    to: "/docs/valibridge"
 ---
-
-The active map is AIDA, aida-planning, common-vue-components, valibridge-client, and valibridge-api. The archived Bitbucket/local branches listed in the decisions file are cleanup targets, not places to keep building.
-
-AIDA is the plotting app. aida-planning is the long-memory planning workspace and deployed planning hub. CVC is the shared component library consumed by several PSV applications. ValiBridge is the mature verification platform that already has project context and permissions.
-
-AIDA does not use CVC today. It has its own `app/components/ui` layer. CVC documentation that says AIDA consumes CVC is wrong and appears in the checklist as a cleanup item.

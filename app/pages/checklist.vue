@@ -14,7 +14,7 @@ interface ChecklistItem {
   /**
    * Owner from the decisions file.
    */
-  owner: "Yazan" | "Uqba" | "Sandro" | "Kevin";
+  owner: string;
 
   /**
    * Task title.
@@ -37,8 +37,8 @@ const checklistItems: ChecklistItem[] = [
   { identifier: "fix-cvc-claude", owner: "Sandro", title: "Fix CVC CLAUDE.md consumer list", description: "It wrongly lists AIDA as a CVC consumer." },
   { identifier: "delete-dead-local", owner: "Yazan", title: "Delete dead local branches and stashes", description: "Remove local-only throwaway branches and stale stashes after the site build." },
   { identifier: "assistant-workflow", owner: "Uqba", title: "Plan Workflow 04 Assistant", description: "Use aida-plan-workflow plus competitor research; the current POC is a directional draft." },
-  { identifier: "pitch-cvc-split", owner: "Uqba", title: "Pitch the CVC split to Kevin", description: "The Turborepo split is Yazan's idea only; present logic before treating it as approved." },
-  { identifier: "playground-expiry", owner: "Kevin", title: "Track playground namespace expiry", description: "play-yazi-kamikazi expires around 2026-12-22." },
+  { identifier: "pitch-cvc-split", owner: "Sandro + Uqba", title: "Pitch the CVC split to Kevin", description: "The Turborepo split is Yazan's idea only; present logic before treating it as approved." },
+  { identifier: "playground-expiry", owner: "Uqba (Kevin backup)", title: "Track playground namespace expiry", description: "play-yazi-kamikazi expires around 2026-12-22." },
   { identifier: "walkthroughs", owner: "Yazan", title: "Run Fri 25 walkthrough sessions", description: "AIDA with Uqba, then CVC and CI/CD with Sandro and Uqba while they do a release." }
 ];
 
