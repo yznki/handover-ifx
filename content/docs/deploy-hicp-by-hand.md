@@ -74,3 +74,5 @@ AIDA has additional application dependencies. Its deployment jobs check auth and
 ## After deployment
 
 Check the route, pods, and browser console. For a static site, the minimum useful checks are the home page, a docs page, the checklist, and mobile viewport behavior. For AIDA, also validate health/readiness endpoints, MIAMI login, user synchronization, and the database path according to the AIDA deployment docs.
+
+If the route works but assets fail, inspect the generated static paths and nginx fallback first. Do not treat a static asset issue as an OpenShift secret issue unless the image pull itself failed.

@@ -52,3 +52,5 @@ The planning hub can show Jira status through a live overlay, but markdown remai
 ## Quick verification after deploy
 
 After deployment, open the route and confirm the hub loads without authentication surprises. Then check that the rendered content matches repository files and that read-only behavior is still intentional. If live Jira status is unavailable, the hub can still be correct as a markdown browser; do not treat Jira overlay failure as loss of source-of-truth content.
+
+Keep the verification focused on the hub contract: readable planning content, preserved routes, and no accidental write mode in the deployed container.

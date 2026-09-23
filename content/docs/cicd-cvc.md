@@ -53,3 +53,5 @@ Separate package release failures from showcase deployment failures. The package
 ## Consumer safety check
 
 After a release candidate, verify the package in at least one real consumer before treating the release as safe for the team. The decisions file names `valibridge-client` as the practical pilot for CVC work. If a change touches editor dependencies, also remember the CKEditor optimization rules in `src/module.ts` because duplicate CKEditor modules can fail in ways that only appear in the browser.
+
+This is the place where pipeline success and product safety separate. Green CI proves the package was built and published; a consumer check proves the browser still renders the shared components.
