@@ -7,6 +7,7 @@ import CustomCursor from "~/components/Interactive/CustomCursor.client.vue";
 const route = useRoute();
 
 const showSiteHeader = computed<boolean>(() => route.path !== "/");
+const showCustomCursor = computed<boolean>(() => route.path !== "/");
 </script>
 
 <template>
@@ -15,7 +16,7 @@ const showSiteHeader = computed<boolean>(() => route.path !== "/");
     <slot />
     <CommandPalette />
     <ClientOnly>
-      <CustomCursor />
+      <CustomCursor v-if="showCustomCursor" />
     </ClientOnly>
   </div>
 </template>

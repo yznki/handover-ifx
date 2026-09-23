@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import StoryExperience from "~/components/Story/StoryExperience.vue";
+import MemeWall from "~/components/Meme/MemeWall.vue";
 </script>
 
 <template>
-  <StoryExperience />
+  <MemeWall />
 </template>

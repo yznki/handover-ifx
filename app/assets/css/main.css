@@ -25,6 +25,32 @@ body {
   font-family: Geist, ui-sans-serif, system-ui;
 }
 
+.font-display {
+  font-family: "Bricolage Grotesque", Geist, ui-sans-serif, system-ui;
+}
+
+.font-meme {
+  font-family: Anton, Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
+
+.shadow-hard {
+  box-shadow: 6px 6px 0 #151417;
+}
+
+.shadow-hard-lg {
+  box-shadow: 10px 10px 0 #151417;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 body,
 #__nuxt {
   min-height: 100%;

@@ -1,4 +1,4 @@
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
 const reviewDirectory = "C:\\Users\\Kiswani\\.copilot\\session-state\\0c59e435-9e11-4684-995a-a38f3769eb8d\\files\\review";
 const pages = [
@@ -16,26 +16,37 @@ const viewports = [
  * @param page - Playwright page.
  * @param delayMilliseconds - Extra render wait after fonts are ready.
  */
-async function waitForSettledLocalRendering(page: Page, delayMilliseconds = 1_500): Promise<void> {
+async function waitForSettledLocalRendering(page: Page, delayMilliseconds = 1_000): Promise<void> {
   await page.evaluate(() => document.fonts.ready.then(() => true));
-  await page.waitForFunction(() => Array.from(document.querySelectorAll("canvas")).every((canvas) => {
-    const renderingContext = canvas.getContext("webgl2") || canvas.getContext("webgl");
-    return Boolean(renderingContext) || canvas.width > 0;
-  }));
+  await page.waitForFunction(() => Array.from(document.querySelectorAll("canvas")).every((canvas) => canvas.width > 0 || canvas.height > 0));
   await page.waitForTimeout(delayMilliseconds);
 }
 
 /**
- * Scrolls to a story screen and waits for animations to settle.
+ * Captures a viewport screenshot after scrolling to a vertical position.
  * @param page - Playwright page.
- * @param screenIndex - Screen index.
- * @returns The story screen locator.
+ * @param screenshotName - Screenshot file name.
+ * @param scrollTop - Window scroll top.
  */
-async function scrollToStoryScreen(page: Page, screenIndex: number): Promise<Locator> {
-  const screenLocator = page.locator("[data-story-screen]").nth(screenIndex);
-  await screenLocator.evaluate((element) => element.scrollIntoView({ block: "start", inline: "nearest" }));
-  await waitForSettledLocalRendering(page);
-  return screenLocator;
+async function captureMemeViewport(page: Page, screenshotName: string, scrollTop: number): Promise<void> {
+  await page.evaluate((nextScrollTop) => window.scrollTo({ top: nextScrollTop, left: 0, behavior: "instant" }), scrollTop);
+  await waitForSettledLocalRendering(page, 1_200);
+  await page.screenshot({ path: `${reviewDirectory}\\${screenshotName}.png`, fullPage: false });
+}
+
+/**
+ * Captures a viewport screenshot after scrolling to a percentage of the page.
+ * @param page - Playwright page.
+ * @param screenshotName - Screenshot file name.
+ * @param scrollRatio - Position between the top and bottom of the page.
+ */
+async function captureMemeViewportAtRatio(page: Page, screenshotName: string, scrollRatio: number): Promise<void> {
+  const scrollTop = await page.evaluate((nextScrollRatio) => {
+    const maximumScrollTop = document.documentElement.scrollHeight - window.innerHeight;
+
+    return Math.max(0, Math.round(maximumScrollTop * nextScrollRatio));
+  }, scrollRatio);
+  await captureMemeViewport(page, screenshotName, scrollTop);
 }
 
 test("generated site renders without console errors", async ({ page }) => {
@@ -57,7 +68,7 @@ test("generated site renders without console errors", async ({ page }) => {
   expect(consoleErrors).toEqual([]);
 });
 
-test("story trailer screens and toys work", async ({ page }) => {
+test("meme wall renders and interactions work", async ({ page }) => {
   test.setTimeout(180_000);
   const consoleErrors: string[] = [];
   page.on("console", (message) => {
@@ -70,116 +81,35 @@ test("story trailer screens and toys work", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("http://127.0.0.1:4173/", { waitUntil: "networkidle" });
   await waitForSettledLocalRendering(page, 2_000);
+  await expect(page.locator("[data-meme-wall]")).toBeVisible();
+  await captureMemeViewport(page, "meme-desktop-01-hero", 0);
+  await captureMemeViewportAtRatio(page, "meme-desktop-02-grid", 0.22);
+  await captureMemeViewportAtRatio(page, "meme-desktop-03-middle", 0.45);
+  await captureMemeViewportAtRatio(page, "meme-desktop-04-late", 0.7);
+  await captureMemeViewportAtRatio(page, "meme-desktop-05-final", 1);
 
-  const screenCount = await page.locator("[data-story-screen]").count();
-  for (const screenIndex of Array.from({ length: screenCount }, (_unusedValue, currentIndex) => currentIndex)) {
-    await scrollToStoryScreen(page, screenIndex);
-    await page.screenshot({ path: `${reviewDirectory}\\story-${String(screenIndex + 1).padStart(2, "0")}.png`, fullPage: false });
-  }
-
-  await page.locator("[data-press-start]").click();
+  await page.locator("[data-shuffle-memes]").click();
+  await page.locator("[data-meme-of-day]").click();
+  await page.locator("[data-meme-card]").first().getByRole("button", { name: /Laugh at/ }).click();
+  await page.getByRole("button", { name: "Reveal punchline" }).first().click();
   await waitForSettledLocalRendering(page);
-  await page.screenshot({ path: `${reviewDirectory}\\story-interaction-hero-start.png`, fullPage: false });
+  await page.screenshot({ path: `${reviewDirectory}\\meme-desktop-interactions.png`, fullPage: false });
 
-  const quizScreen = await scrollToStoryScreen(page, 1);
-  await quizScreen.getByRole("button", { name: "Fix upstream in CVC" }).click();
-  await quizScreen.locator("[data-quiz-next]").click();
-  await quizScreen.getByRole("button", { name: "Ship quick, imperfect, then clean" }).click();
-  await quizScreen.locator("[data-quiz-next]").click();
-  await quizScreen.getByRole("button", { name: "Whoever makes more sense wins" }).click();
-  await waitForSettledLocalRendering(page);
-  await page.screenshot({ path: `${reviewDirectory}\\story-interaction-quiz.png`, fullPage: false });
-
-  const redFlagsScreen = await scrollToStoryScreen(page, 2);
-  const redFlagButtons = redFlagsScreen.locator("[data-toy='red-flags'] button");
-  const redFlagCount = await redFlagButtons.count();
-  for (const redFlagIndex of Array.from({ length: redFlagCount }, (_unusedValue, currentIndex) => currentIndex)) {
-    await redFlagButtons.nth(redFlagIndex).click();
-  }
-  await waitForSettledLocalRendering(page);
-  await page.screenshot({ path: `${reviewDirectory}\\story-interaction-red-flags.png`, fullPage: false });
-
-  const mapScreen = await scrollToStoryScreen(page, 3);
-  const cvcNode = mapScreen.getByRole("button", { name: "CVC" });
-  await cvcNode.dragTo(mapScreen.locator("[data-repository-map]"), { targetPosition: { x: 680, y: 260 } });
-  await waitForSettledLocalRendering(page);
-  await page.screenshot({ path: `${reviewDirectory}\\story-interaction-map.png`, fullPage: false });
-
-  const aidaScreen = await scrollToStoryScreen(page, 4);
-  await aidaScreen.locator("[data-csv-file]").dragTo(aidaScreen.locator("[data-drop-zone]"));
-  await aidaScreen.locator("[data-drop-zone]").click();
-  await waitForSettledLocalRendering(page);
-  await page.screenshot({ path: `${reviewDirectory}\\story-interaction-aida-drop.png`, fullPage: false });
-
-  const pipelineScreen = await scrollToStoryScreen(page, 5);
-  await pipelineScreen.getByRole("button", { name: "master stable" }).click();
-  await pipelineScreen.locator("[data-git-push]").click();
-  await expect(pipelineScreen.getByText("deploy reached oc deploy")).toBeVisible({ timeout: 5_000 });
-  await waitForSettledLocalRendering(page);
-  await page.screenshot({ path: `${reviewDirectory}\\story-interaction-pipeline.png`, fullPage: false });
-
-  const cvcScreen = await scrollToStoryScreen(page, 6);
-  await cvcScreen.locator("[data-monolith-block]").click();
-  await waitForSettledLocalRendering(page);
-  await page.screenshot({ path: `${reviewDirectory}\\story-interaction-cvc-split.png`, fullPage: false });
+  await page.locator("[data-accept-handover]").scrollIntoViewIfNeeded();
+  await page.locator("[data-accept-handover]").click();
+  await page.waitForURL("**/checklist", { timeout: 3_000 });
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("http://127.0.0.1:4173/", { waitUntil: "networkidle" });
   await waitForSettledLocalRendering(page, 2_000);
-  const mobileScreenCount = await page.locator("[data-story-screen]").count();
-  for (const screenIndex of Array.from({ length: mobileScreenCount }, (_unusedValue, currentIndex) => currentIndex)) {
-    await scrollToStoryScreen(page, screenIndex);
-    await page.screenshot({ path: `${reviewDirectory}\\story-mobile-${String(screenIndex + 1).padStart(2, "0")}.png`, fullPage: false });
-  }
-
-  const mobileQuizScreen = await scrollToStoryScreen(page, 1);
-  await mobileQuizScreen.getByRole("button", { name: "Fix upstream in CVC" }).click();
-  await mobileQuizScreen.locator("[data-quiz-next]").click();
-  await mobileQuizScreen.getByRole("button", { name: "Ship quick, imperfect, then clean" }).click();
-  await mobileQuizScreen.locator("[data-quiz-next]").click();
-  await mobileQuizScreen.getByRole("button", { name: "Whoever makes more sense wins" }).click();
+  await captureMemeViewport(page, "meme-mobile-01-hero", 0);
+  await captureMemeViewportAtRatio(page, "meme-mobile-02-grid", 0.22);
+  await captureMemeViewportAtRatio(page, "meme-mobile-03-middle", 0.45);
+  await captureMemeViewportAtRatio(page, "meme-mobile-04-late", 0.7);
+  await captureMemeViewportAtRatio(page, "meme-mobile-05-final", 1);
+  await page.locator("[data-meme-card]").first().getByRole("button", { name: /Laugh at/ }).click();
   await waitForSettledLocalRendering(page);
-  await page.screenshot({ path: `${reviewDirectory}\\story-mobile-interaction-quiz.png`, fullPage: false });
-
-  const mobileRedFlagsScreen = await scrollToStoryScreen(page, 2);
-  const mobileRedFlagButtons = mobileRedFlagsScreen.locator("[data-toy='red-flags'] button");
-  const mobileRedFlagCount = await mobileRedFlagButtons.count();
-  for (const redFlagIndex of Array.from({ length: mobileRedFlagCount }, (_unusedValue, currentIndex) => currentIndex)) {
-    await mobileRedFlagButtons.nth(redFlagIndex).click();
-  }
-  await waitForSettledLocalRendering(page);
-  await page.screenshot({ path: `${reviewDirectory}\\story-mobile-interaction-red-flags.png`, fullPage: false });
-
-  const mobileMapScreen = await scrollToStoryScreen(page, 3);
-  await mobileMapScreen.getByRole("button", { name: "CVC" }).press("ArrowRight");
-  await mobileMapScreen.getByRole("button", { name: "CVC" }).press("ArrowDown");
-  await waitForSettledLocalRendering(page);
-  await page.screenshot({ path: `${reviewDirectory}\\story-mobile-interaction-map.png`, fullPage: false });
-
-  const mobileAidaScreen = await scrollToStoryScreen(page, 4);
-  await mobileAidaScreen.locator("[data-drop-zone]").click();
-  await waitForSettledLocalRendering(page);
-  await page.screenshot({ path: `${reviewDirectory}\\story-mobile-interaction-aida-drop.png`, fullPage: false });
-
-  const mobilePipelineScreen = await scrollToStoryScreen(page, 5);
-  await mobilePipelineScreen.getByRole("button", { name: "master stable" }).click();
-  await mobilePipelineScreen.locator("[data-git-push]").click();
-  await expect(mobilePipelineScreen.getByText("deploy reached oc deploy")).toBeVisible({ timeout: 5_000 });
-  await waitForSettledLocalRendering(page);
-  await page.screenshot({ path: `${reviewDirectory}\\story-mobile-interaction-pipeline.png`, fullPage: false });
-
-  const mobileCvcScreen = await scrollToStoryScreen(page, 6);
-  await mobileCvcScreen.locator("[data-monolith-block]").click();
-  await waitForSettledLocalRendering(page);
-  await page.screenshot({ path: `${reviewDirectory}\\story-mobile-interaction-cvc-split.png`, fullPage: false });
-
-  await page.screenshot({ path: `${reviewDirectory}\\story-mobile.png`, fullPage: true });
-
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("http://127.0.0.1:4173/", { waitUntil: "networkidle" });
-  await scrollToStoryScreen(page, 4);
-  await page.screenshot({ path: `${reviewDirectory}\\story-reduced-motion.png`, fullPage: false });
+  await page.screenshot({ path: `${reviewDirectory}\\meme-mobile-interactions.png`, fullPage: false });
 
   expect(consoleErrors).toEqual([]);
 });

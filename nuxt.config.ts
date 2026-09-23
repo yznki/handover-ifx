@@ -9,7 +9,9 @@ export default defineNuxtConfig({
     families: [
       { name: "Geist", provider: "google", weights: ["400", "500", "600", "700", "800", "900"] },
       { name: "Geist Mono", provider: "google", weights: ["400", "500", "600", "700"] },
-      { name: "Caveat", provider: "google", weights: ["500", "600", "700"] }
+      { name: "Caveat", provider: "google", weights: ["500", "600", "700"] },
+      { name: "Bricolage Grotesque", provider: "google", weights: ["700", "800"] },
+      { name: "Anton", provider: "google", weights: ["400"] }
     ]
   },
   nitro: {
