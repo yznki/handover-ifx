@@ -63,6 +63,9 @@ test("story trailer screens and toys work", async ({ page }) => {
   page.on("console", (message) => {
     if (message.type() === "error") consoleErrors.push(message.text());
   });
+  await page.addInitScript(() => {
+    window.localStorage.clear();
+  });
 
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("http://127.0.0.1:4173/", { waitUntil: "networkidle" });

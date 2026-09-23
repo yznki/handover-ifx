@@ -46,7 +46,7 @@ const properties = withDefaults(defineProps<HeroObjectProperties>(), {
 
 const shapeProgress = ref<number>(0);
 const pointerPosition = ref<Vector3>(new Vector3(0, 0, 0));
-const particleCount = 132;
+const particleCount = 150;
 const cameraPosition = new Vector3(0, 0, 4.35);
 const lightPosition = new Vector3(2, 4, 6);
 const rootStyle = cva("relative", {
@@ -58,22 +58,41 @@ const rootStyle = cva("relative", {
   }
 });
 
+const currentShapeIndex = computed<number>(() => Math.min(Math.floor(shapeProgress.value * 5), 4));
+const groupPosition = computed<Vector3>(() => {
+  const positions = [
+    new Vector3(1.25, -0.08, 0),
+    new Vector3(1.35, -0.65, 0),
+    new Vector3(1.25, -0.7, 0),
+    new Vector3(-1.05, -0.9, 0),
+    new Vector3(0, -0.75, 0)
+  ];
+  return positions[currentShapeIndex.value] || positions[0] || new Vector3(0, 0, 0);
+});
+const groupScale = computed<Vector3>(() => {
+  const scale = currentShapeIndex.value === 0 ? 1.08 : 0.82;
+  return new Vector3(scale, scale, scale);
+});
+const groupRotation = computed<[number, number, number]>(() => [
+  0.03 + pointerPosition.value.y * 0.05,
+  currentShapeIndex.value === 0 ? pointerPosition.value.x * 0.06 : shapeProgress.value * 1.05 + pointerPosition.value.x * 0.08,
+  currentShapeIndex.value === 0 ? 0 : 0.04
+]);
 const particles = computed<ParticlePosition[]>(() => Array.from({ length: particleCount }, (_unusedValue, particleIndex) => {
   const normalizedIndex = particleIndex / particleCount;
   const angle = normalizedIndex * Math.PI * 2;
-  const storyShape = Math.floor(shapeProgress.value * 5);
   const wave = Math.sin(normalizedIndex * 20 + shapeProgress.value * 8);
-  const letterY = new Vector3((normalizedIndex - 0.5) * 3.2, Math.abs(normalizedIndex - 0.5) * 4 - 1.8, wave * 0.4);
+  const letterY = createLetterYPosition(particleIndex);
   const chart = new Vector3((normalizedIndex - 0.5) * 4, Math.sin(normalizedIndex * Math.PI) * 2 - 0.8, wave * 0.5);
   const blocks = new Vector3((particleIndex % 7 - 3) * 0.55, (Math.floor(particleIndex / 7) % 6 - 3) * 0.45, Math.floor(particleIndex / 42) * 0.8 - 0.4);
   const bridge = new Vector3(Math.cos(angle) * 2.4, Math.sin(angle) * 0.6 - 0.7, Math.sin(angle) * 0.7);
   const handover = new Vector3((particleIndex % 2 === 0 ? -1.5 : 1.5) + Math.cos(angle) * 0.65, Math.sin(angle) * 0.9, wave * 0.55);
   const shapes = [letterY, chart, blocks, bridge, handover];
-  const vector = shapes[Math.min(storyShape, shapes.length - 1)] || letterY;
+  const vector = shapes[currentShapeIndex.value] || letterY;
   const distance = vector.distanceTo(pointerPosition.value);
   const pointerForce = properties.interactive ? Math.max(0, 1.85 - distance) * 0.42 : 0;
   const pointerVector = vector.clone().sub(pointerPosition.value).normalize().multiplyScalar(pointerForce);
-  const scale = 0.26 + Math.abs(wave) * 0.1;
+  const scale = currentShapeIndex.value === 0 ? 0.2 : 0.24 + Math.abs(wave) * 0.08;
 
   return {
     key: `particle-${particleIndex}`,
@@ -81,6 +100,24 @@ const particles = computed<ParticlePosition[]>(() => Array.from({ length: partic
     scale: new Vector3(scale, scale, scale)
   };
 }));
+
+/**
+ * Creates a crisp particle position along a letter Y.
+ * @param particleIndex - Particle index.
+ * @returns Letter Y particle position.
+ */
+function createLetterYPosition(particleIndex: number): Vector3 {
+  const segmentSize = Math.floor(particleCount / 3);
+  const segmentIndex = Math.floor(particleIndex / segmentSize);
+  const positionInSegment = (particleIndex % segmentSize) / Math.max(1, segmentSize - 1);
+  const thicknessOffset = ((particleIndex % 5) - 2) * 0.045;
+  const depthOffset = ((particleIndex % 3) - 1) * 0.045;
+  const leftBranch = new Vector3(-1.1 + positionInSegment * 1.1 + thicknessOffset, 1.35 - positionInSegment * 1.25, depthOffset);
+  const rightBranch = new Vector3(1.1 - positionInSegment * 1.1 + thicknessOffset, 1.35 - positionInSegment * 1.25, depthOffset);
+  const stem = new Vector3(thicknessOffset, 0.12 - positionInSegment * 1.75, depthOffset);
+  const segments = [leftBranch, rightBranch, stem];
+  return segments[Math.min(segmentIndex, segments.length - 1)] || stem;
+}
 
 /**
  * Updates the procedural shape by scroll progress.
@@ -108,7 +145,7 @@ defineExpose({ setShapeProgress, setPointerPosition });
       <TresPerspectiveCamera :position="cameraPosition" :look-at="new Vector3(0, 0, 0)" />
       <TresAmbientLight :intensity="1.4" />
       <TresDirectionalLight :position="lightPosition" :intensity="1.8" />
-      <TresGroup :rotation="[0.25 + pointerPosition.y * 0.08, shapeProgress * 1.4 + pointerPosition.x * 0.12, 0.05]">
+      <TresGroup :position="groupPosition" :rotation="groupRotation" :scale="groupScale">
         <TresMesh v-for="particle in particles" :key="particle.key" :position="particle.position" :scale="particle.scale">
           <TresBoxGeometry :args="[1, 1, 1]" />
           <TresMeshStandardMaterial color="#6D3BFF" emissive="#3B1E8C" :emissive-intensity="0.18" :roughness="0.28" :metalness="0.12" />

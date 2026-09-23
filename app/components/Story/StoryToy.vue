@@ -141,6 +141,11 @@ interface CvcPackage {
    * Dependency tags carried by the package.
    */
   dependencies: string[];
+
+  /**
+   * Whether the package is the core target package.
+   */
+  featured?: boolean;
 }
 
 /**
@@ -216,7 +221,7 @@ const defaultFlagItems = ["blind vibe coding", "new packages without research", 
 const pipelineStages = ["verify", "build", "semantic-release", "docker push", "oc deploy"];
 const monolithDependencies = ["ckeditor5", "plotly", "d3", "fontawesome pro", "validators", "forms"];
 const cvcPackages: CvcPackage[] = [
-  { name: "@psvcommon/ui", dependencies: ["base tokens", "shared styles"] },
+  { name: "@psvcommon/ui", dependencies: ["base tokens", "shared styles"], featured: true },
   { name: "editor family", dependencies: ["ckeditor5 peer"] },
   { name: "plot family", dependencies: ["plotly peer", "d3 peer"] },
   { name: "form family", dependencies: ["validators peer"] }
@@ -292,12 +297,12 @@ const branchButtonStyle = cva("rounded-full px-5 py-3 font-mono text-xs uppercas
     }
   }
 });
-const pipelineStageStyle = cva("relative overflow-hidden rounded-[1.4rem] border px-3 py-3 text-center font-mono text-[0.68rem] uppercase tracking-[0.12em] transition md:py-7", {
+const pipelineStageStyle = cva("relative grid h-12 place-items-center overflow-hidden rounded-[1.2rem] border px-3 py-2 text-center font-mono text-[0.68rem] uppercase tracking-[0.12em] transition md:h-28 md:rounded-[1.4rem] md:py-4", {
   variants: {
     state: {
       idle: "border-ink/10 bg-white/45 text-muted",
       running: "scale-[1.03] border-violet-500 bg-violet-50 text-violet-700 shadow-violet",
-      done: "border-violet-500 bg-violet-500 text-paper shadow-violet"
+      done: "border-violet-500/40 bg-violet-100 text-violet-700 shadow-violet"
     }
   }
 });
@@ -306,6 +311,22 @@ const monolithBlockStyle = cva("relative grid min-h-[8.5rem] place-items-center 
     broken: {
       true: "rotate-[-2deg] border-violet-500 bg-violet-500 text-paper shadow-violet",
       false: "border-ink bg-ink text-paper shadow-editorial hover:scale-[1.02]"
+    }
+  }
+});
+const cvcPackageStyle = cva("rounded-[1rem] border p-2 text-center shadow-editorial md:rounded-[1.25rem] md:p-4", {
+  variants: {
+    featured: {
+      true: "border-violet-500 bg-violet-500 text-paper",
+      false: "border-violet-500/20 bg-violet-50 text-ink"
+    }
+  }
+});
+const cvcPackageNameStyle = cva("font-mono text-[0.62rem] uppercase tracking-[0.1em] md:text-xs md:tracking-[0.14em]", {
+  variants: {
+    featured: {
+      true: "text-paper",
+      false: "text-violet-700"
     }
   }
 });
@@ -514,7 +535,7 @@ watch(terminalLines, async () => {
       <div class="pointer-events-none absolute inset-0 grid place-items-center">
         <div class="text-[clamp(10rem,34vw,30rem)] font-extrabold leading-none tracking-[-0.12em] text-violet-500/20">Y</div>
       </div>
-      <button class="group absolute left-1/2 top-[62%] z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink px-8 py-5 font-mono text-sm uppercase tracking-[0.22em] text-paper shadow-editorial transition hover:-translate-y-[55%] hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500" data-press-start @click="startStory">
+      <button class="group absolute left-1/2 top-[52%] z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink px-8 py-5 font-mono text-sm uppercase tracking-[0.22em] text-paper shadow-editorial transition hover:-translate-y-[55%] hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 md:top-[52%]" data-press-start @click="startStory">
         <span class="inline-flex animate-pulse items-center gap-3 motion-reduce:animate-none">Press start <span>→</span></span>
         <span class="mt-2 block text-[0.62rem] tracking-[0.22em] text-paper/60">~2 min</span>
       </button>
@@ -589,20 +610,20 @@ watch(terminalLines, async () => {
       </div>
     </div>
 
-    <div v-else-if="toyType === 'pipeline'" class="grid h-full min-h-0 grid-rows-[auto_1fr_0.85fr] gap-3 md:gap-4">
+    <div v-else-if="toyType === 'pipeline'" class="grid h-full min-h-0 grid-rows-[auto_auto_minmax(0,1fr)] gap-3 md:gap-4">
       <div class="flex flex-wrap items-center gap-3">
         <button :class="branchButtonStyle({ active: activePipelineBranch === 'develop' })" @click="activePipelineBranch = 'develop'">develop prerelease</button>
         <button :class="branchButtonStyle({ active: activePipelineBranch === 'master' })" @click="activePipelineBranch = 'master'">master stable</button>
         <button class="rounded-full bg-ink px-5 py-3 font-mono text-xs uppercase tracking-[0.16em] text-paper transition hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500" data-git-push @click="runPipeline">{{ pipelineRunning ? "running" : "git push" }}</button>
         <span class="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-muted">example version {{ pipelineVersionExample }}</span>
       </div>
-      <div class="relative grid min-h-0 gap-3 md:grid-cols-5">
+      <div class="relative grid min-h-0 gap-2 md:grid-cols-5 md:gap-3">
         <div class="absolute left-0 right-0 top-1/2 hidden h-1 -translate-y-1/2 bg-ink/10 md:block">
           <div class="h-full bg-violet-500 transition-all duration-500" :style="{ width: `${(completedPipelineStages.length / pipelineStages.length) * 100}%` }" />
         </div>
         <div v-for="(stage, stageIndex) in pipelineStages" :key="stage" :class="pipelineStageStyle({ state: completedPipelineStages.includes(stage) ? 'done' : runningPipelineStageIndex === stageIndex ? 'running' : 'idle' })">
-          <span v-if="completedPipelineStages.includes(stage)" class="mb-2 block text-2xl">✓</span>
-          <span v-else-if="runningPipelineStageIndex === stageIndex" class="mx-auto mb-2 block h-5 w-5 animate-spin rounded-full border-2 border-violet-500 border-t-transparent motion-reduce:animate-none" />
+          <span v-if="completedPipelineStages.includes(stage)" class="mb-1 block text-xl">✓</span>
+          <span v-else-if="runningPipelineStageIndex === stageIndex" class="mx-auto mb-1 block h-5 w-5 animate-spin rounded-full border-2 border-violet-500 border-t-transparent motion-reduce:animate-none" />
           {{ stage }}
         </div>
       </div>
@@ -610,19 +631,18 @@ watch(terminalLines, async () => {
     </div>
 
     <div v-else-if="toyType === 'cvc-split'" class="grid h-full min-h-0 content-center gap-2 md:gap-4">
-      <button :class="monolithBlockStyle({ broken: monolithBroken })" data-monolith-block @click="breakMonolith" @pointerdown="startMonolithHold" @pointerup="stopMonolithHold" @pointercancel="stopMonolithHold">
-        <div v-if="!monolithBroken" class="grid gap-2 p-4 md:gap-4 md:p-5">
+      <button v-if="!monolithBroken" :class="monolithBlockStyle({ broken: monolithBroken })" data-monolith-block @click="breakMonolith" @pointerdown="startMonolithHold" @pointerup="stopMonolithHold" @pointercancel="stopMonolithHold">
+        <div class="grid gap-2 p-4 md:gap-4 md:p-5">
           <span class="text-[clamp(1rem,3vw,2.4rem)] font-extrabold tracking-[-0.04em]">@psvcommon/common-components</span>
           <span class="flex flex-wrap justify-center gap-1.5 md:gap-2">
             <span v-for="dependency in monolithDependencies" :key="dependency" class="rounded-full bg-paper/10 px-2 py-1 text-[0.52rem] md:px-3 md:text-[0.62rem]">{{ dependency }}</span>
           </span>
           <span class="font-hand text-3xl normal-case tracking-normal text-violet-100 md:text-4xl">click or hold to crack</span>
         </div>
-        <div v-else class="text-[clamp(1.8rem,4vw,3.2rem)] font-extrabold tracking-[-0.05em]">@psvcommon/ui</div>
       </button>
-      <div class="grid grid-cols-2 gap-2 transition md:grid-cols-4 md:gap-3" :class="monolithBroken ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-30'">
-        <div v-for="packageItem in cvcPackages" :key="packageItem.name" class="rounded-[1rem] border border-violet-500/20 bg-violet-50 p-2 text-center shadow-editorial md:rounded-[1.25rem] md:p-4">
-          <p class="font-mono text-[0.62rem] uppercase tracking-[0.1em] text-violet-700 md:text-xs md:tracking-[0.14em]">{{ packageItem.name }}</p>
+      <div v-if="monolithBroken" class="grid grid-cols-2 gap-2 transition md:grid-cols-4 md:gap-3">
+        <div v-for="packageItem in cvcPackages" :key="packageItem.name" :class="cvcPackageStyle({ featured: packageItem.featured || false })">
+          <p :class="cvcPackageNameStyle({ featured: packageItem.featured || false })">{{ packageItem.name }}</p>
           <div class="mt-2 flex flex-wrap justify-center gap-1 md:mt-3 md:gap-2">
             <span v-for="dependency in packageItem.dependencies" :key="dependency" class="rounded-full bg-paper px-2 py-1 font-mono text-[0.58rem] uppercase tracking-[0.1em] text-muted">{{ dependency }}</span>
           </div>

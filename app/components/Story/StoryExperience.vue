@@ -124,6 +124,25 @@ const headlineStyle = cva("font-extrabold leading-[0.95] tracking-[-0.04em] text
     }
   }
 });
+const copyContentStyle = cva("max-w-2xl", {
+  variants: {
+    layout: {
+      hero: "rounded-[1.75rem] bg-paper/72 p-3 backdrop-blur-sm md:bg-transparent md:p-0 md:backdrop-blur-0",
+      leftToy: "rounded-[1.75rem] bg-paper/86 p-3 backdrop-blur-sm md:p-4",
+      rightToy: "rounded-[1.75rem] bg-paper/86 p-3 backdrop-blur-sm md:p-4",
+      overlay: "rounded-[1.75rem] bg-paper/88 p-3 backdrop-blur-sm md:p-4",
+      tiny: "rounded-[1.75rem] bg-paper/86 p-3 backdrop-blur-sm md:p-4"
+    }
+  }
+});
+const heroObjectBackdropStyle = cva("pointer-events-none fixed inset-0 z-0 hidden mix-blend-multiply motion-reduce:hidden md:block", {
+  variants: {
+    hero: {
+      true: "opacity-70",
+      false: "opacity-28"
+    }
+  }
+});
 
 const { data: storyDocuments } = await useAsyncData("story-trailer-documents", () => queryCollection("documents").where("path", "LIKE", "/story/%").order("order", "ASC").all());
 const { prefersReducedMotion } = useReducedMotion();
@@ -274,7 +293,7 @@ onBeforeUnmount(() => {
 <template>
   <main class="relative min-h-screen snap-y snap-mandatory overflow-x-hidden bg-paper motion-reduce:snap-none" @pointermove="updatePointerPosition">
     <ClientOnly>
-      <div class="pointer-events-none fixed inset-0 z-0 opacity-55 mix-blend-multiply motion-reduce:hidden">
+      <div :class="heroObjectBackdropStyle({ hero: activeScreenIndex === 0 })">
         <HeroObject ref="floatingHeroObject" floating interactive />
       </div>
     </ClientOnly>
@@ -283,9 +302,9 @@ onBeforeUnmount(() => {
       <div class="h-full bg-violet-500 transition-all duration-500" :style="{ width: `${progressPercentage}%` }" />
     </div>
 
-    <nav class="fixed left-4 right-4 top-4 z-50 grid grid-cols-[auto_1fr_auto] items-center gap-4 rounded-full border border-ink/10 bg-paper/90 px-3 py-3 shadow-editorial backdrop-blur md:left-8 md:right-8 md:px-4">
+    <nav class="fixed left-4 right-4 top-4 z-50 grid grid-cols-[auto_1fr_auto] items-center gap-4 rounded-full border border-ink/10 bg-paper px-3 py-3 shadow-editorial md:left-8 md:right-8 md:px-4">
       <div class="flex items-center gap-2">
-        <button class="grid h-9 w-9 place-items-center rounded-full bg-violet-500 font-mono text-[0.65rem] font-bold text-paper shadow-violet" aria-label="Yazan Kiswani story start" @click="goToScreen(0)">YK</button>
+        <button class="rounded-full border border-ink/10 bg-paper px-4 py-2 font-mono text-[0.65rem] font-bold uppercase tracking-[0.18em] text-violet-700 transition hover:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500" aria-label="Yazan Kiswani story start" @click="goToScreen(0)">YK</button>
         <button v-if="hasProgress" class="hidden rounded-full bg-ink px-4 py-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-paper transition hover:bg-violet-700 md:block" @click="continueTrailer">Continue</button>
       </div>
       <div class="mx-auto flex items-center gap-2 md:gap-3">
@@ -296,7 +315,7 @@ onBeforeUnmount(() => {
 
     <section v-for="(screen, screenIndex) in storyScreens" :id="`story-screen-${screen.order || screenIndex}`" :key="screen.path" :ref="getScreenElementSetter(screenIndex)" :data-screen-index="screenIndex" data-story-screen :class="screenCompositionStyle({ layout: getScreenLayout(screen, screenIndex) })">
       <div :class="copyPanelStyle({ layout: getScreenLayout(screen, screenIndex) })">
-        <div class="max-w-2xl">
+        <div :class="copyContentStyle({ layout: getScreenLayout(screen, screenIndex) })">
           <p class="font-mono text-xs uppercase tracking-[0.28em] text-violet-700">{{ screen.chapter }} / {{ screen.title }}</p>
           <h1 :class="headlineStyle({ layout: getScreenLayout(screen, screenIndex) })">
             {{ screen.headline }}
