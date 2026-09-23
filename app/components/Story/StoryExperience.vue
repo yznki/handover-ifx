@@ -126,7 +126,7 @@ onMounted(async () => {
 
     <section class="mx-auto max-w-[1600px] px-4 py-12 md:px-8">
       <div class="grid gap-5 md:grid-cols-3">
-        <figure v-for="screen in ['aida-planning', 'common-vue-components', 'common-vue-components-demo']" :key="screen" class="rounded-[2rem] border border-ink/10 bg-ink p-3 shadow-editorial">
+        <figure v-for="screen in ['aida', 'aida-demo', 'aida-planning', 'common-vue-components', 'common-vue-components-demo']" :key="screen" class="rounded-[2rem] border border-ink/10 bg-ink p-3 shadow-editorial">
           <div class="mb-3 flex gap-1.5 px-2 pt-1">
             <span class="h-2.5 w-2.5 rounded-full bg-violet-500" />
             <span class="h-2.5 w-2.5 rounded-full bg-violet-400" />

@@ -1,6 +1,8 @@
 import { test } from "@playwright/test";
 
 const targets = [
+  { name: "aida", url: "https://aida.icp.infineon.com" },
+  { name: "aida-demo", url: "https://aida-demo.icp.infineon.com" },
   { name: "aida-planning", url: "https://aida-planning.icp.infineon.com" },
   { name: "common-vue-components", url: "https://common-vue-components.icp.infineon.com" },
   { name: "common-vue-components-demo", url: "https://common-vue-components-demo.icp.infineon.com" }
