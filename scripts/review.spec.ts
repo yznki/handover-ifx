@@ -84,6 +84,58 @@ test("minimal home landing works", async ({ page }) => {
   expect(consoleErrors).toEqual([]);
 });
 
+test("enhanced home physics delight works", async ({ page }) => {
+  test.setTimeout(120_000);
+  const consoleErrors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") consoleErrors.push(message.text());
+  });
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("http://127.0.0.1:4173/", { waitUntil: "networkidle" });
+  await expect(page.locator("[data-physics-bye]")).toBeVisible();
+  await waitForSettledLocalRendering(page, 2_400);
+  await page.screenshot({ path: `${reviewDirectory}\\home-desktop-more-initial.png`, fullPage: false });
+
+  await page.keyboard.type("thanks uqba");
+  await waitForSettledLocalRendering(page, 1_600);
+  await page.screenshot({ path: `${reviewDirectory}\\home-desktop-more-typed.png`, fullPage: false });
+
+  await page.keyboard.press("Escape");
+  await waitForSettledLocalRendering(page, 800);
+  const bodyLimitSample = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234";
+  await page.keyboard.type(bodyLimitSample);
+  await waitForSettledLocalRendering(page, 1_000);
+  await expect(page.locator("[data-letter-character]")).toHaveCount(60);
+
+  await page.keyboard.press("Escape");
+  await waitForSettledLocalRendering(page, 800);
+  const stackTargets = [
+    { horizontalPosition: 720, verticalPosition: 420 },
+    { horizontalPosition: 720, verticalPosition: 340 },
+    { horizontalPosition: 720, verticalPosition: 260 }
+  ];
+  for (const [letterIndex, stackTarget] of stackTargets.entries()) {
+    const letterBounds = await page.locator("[data-letter-character]").nth(letterIndex).boundingBox();
+    expect(letterBounds).not.toBeNull();
+    await page.mouse.move((letterBounds?.x || 0) + (letterBounds?.width || 0) / 2, (letterBounds?.y || 0) + (letterBounds?.height || 0) / 2);
+    await page.mouse.down();
+    await page.mouse.move(stackTarget.horizontalPosition, stackTarget.verticalPosition, { steps: 18 });
+    await page.waitForTimeout(80);
+    await page.mouse.up();
+    await page.waitForTimeout(120);
+  }
+  await waitForSettledLocalRendering(page, 300);
+  await page.screenshot({ path: `${reviewDirectory}\\home-desktop-more-stacked.png`, fullPage: false });
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("http://127.0.0.1:4173/", { waitUntil: "networkidle" });
+  await waitForSettledLocalRendering(page, 2_000);
+  await page.screenshot({ path: `${reviewDirectory}\\home-mobile-more.png`, fullPage: false });
+
+  expect(consoleErrors).toEqual([]);
+});
+
 test("explore pages and checklist render refined chrome", async ({ page }) => {
   test.setTimeout(120_000);
   const consoleErrors: string[] = [];
