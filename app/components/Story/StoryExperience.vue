@@ -1,53 +1,53 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { cva, type VariantProps } from "class-variance-authority";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { cva } from "class-variance-authority";
 import HeroObject from "~/components/Story/HeroObject.client.vue";
-import StatCounter from "~/components/Story/StatCounter.vue";
-import StoryBeatVisual from "~/components/Story/StoryBeatVisual.vue";
+import StoryToy from "~/components/Story/StoryToy.vue";
 import { useReducedMotion } from "~/composables/useReducedMotion/useReducedMotion";
 import { useStoryProgress } from "~/composables/useStoryProgress/useStoryProgress";
+import type { ComponentPublicInstance } from "vue";
 
 /**
- * A structured story beat.
+ * Short story toy configuration.
  */
-interface StoryBeat {
+interface StoryToyConfiguration {
   /**
-   * Primary beat statement.
+   * Toy type.
    */
-  statement: string;
+  type: string;
 
   /**
-   * Optional supporting sentence.
+   * Link label.
    */
-  support?: string;
+  linkLabel?: string;
 
   /**
-   * Optional handwritten note.
+   * Link route.
    */
-  note?: string;
+  linkTo?: string;
 
   /**
-   * Visual treatment identifier.
+   * Optional toy labels.
    */
-  visual?: string;
+  items?: string[];
 }
 
 /**
- * Story document fields used by the chapter renderer.
+ * Trailer screen document fields.
  */
-interface StoryDocument {
+interface StoryScreenDocument {
   /**
    * Content path.
    */
   path: string;
 
   /**
-   * Chapter title.
+   * Short title.
    */
   title: string;
 
   /**
-   * Chapter identifier.
+   * Two-digit chapter label.
    */
   chapter?: string;
 
@@ -57,171 +57,191 @@ interface StoryDocument {
   order?: number;
 
   /**
-   * Chapter note.
+   * Main screen line.
    */
-  note?: string;
+  headline?: string;
 
   /**
-   * Structured beat list.
+   * Small supporting line.
    */
-  beats?: StoryBeat[];
+  subline?: string;
 
   /**
-   * Deep-link list.
+   * Toy configuration.
    */
-  links?: Array<{ label: string; to: string }>;
+  toy?: StoryToyConfiguration;
 }
 
-const beatHeadlineStyle = cva("mt-5 flex max-w-[14ch] flex-wrap gap-x-3 gap-y-0 overflow-visible font-extrabold leading-[0.94] tracking-[-0.04em] text-ink md:gap-x-4", {
+const dotButtonStyle = cva("h-3 w-3 rounded-full border transition focus:outline-none focus:ring-2 focus:ring-violet-500", {
   variants: {
-    scale: {
-      primary: "text-[clamp(3rem,6.4vw,7.2rem)]",
-      secondary: "text-[clamp(2.4rem,5vw,5.6rem)]",
-      quiet: "text-[clamp(2rem,4vw,4.4rem)]"
+    active: {
+      true: "scale-125 border-violet-500 bg-violet-500 shadow-violet",
+      false: "border-ink/20 bg-paper hover:border-violet-500"
     }
   }
 });
 
-type BeatHeadlineScale = NonNullable<VariantProps<typeof beatHeadlineStyle>["scale"]>;
-
-const { data: storyDocuments } = await useAsyncData("story-documents", () => queryCollection("documents").where("path", "LIKE", "/story/%").order("order", "ASC").all());
+const { data: storyDocuments } = await useAsyncData("story-trailer-documents", () => queryCollection("documents").where("path", "LIKE", "/story/%").order("order", "ASC").all());
 const { prefersReducedMotion } = useReducedMotion();
 const { lastChapterPath, hasProgress, rememberChapter } = useStoryProgress();
 
-const heroObject = ref<InstanceType<typeof HeroObject> | null>(null);
 const floatingHeroObject = ref<InstanceType<typeof HeroObject> | null>(null);
-const resolvedStoryDocuments = computed<StoryDocument[]>(() => (storyDocuments.value || []) as StoryDocument[]);
-const continueHref = computed<string>(() => lastChapterPath.value ? `#${lastChapterPath.value.replace("/story/", "chapter-")}` : "#chapter-00-hero");
+const screenObserver = ref<IntersectionObserver | null>(null);
+const activeScreenIndex = ref<number>(0);
+const screenElements = ref<HTMLElement[]>([]);
+
+const storyScreens = computed<StoryScreenDocument[]>(() => ([...((storyDocuments.value || []) as StoryScreenDocument[])]).sort((firstScreen, secondScreen) => (firstScreen.order || 0) - (secondScreen.order || 0)));
+const progressPercentage = computed<number>(() => storyScreens.value.length <= 1 ? 0 : (activeScreenIndex.value / (storyScreens.value.length - 1)) * 100);
+const savedScreenIndex = computed<number>(() => {
+  const matchingIndex = storyScreens.value.findIndex((screen) => screen.path === lastChapterPath.value);
+  return matchingIndex >= 0 ? matchingIndex : 0;
+});
 
 /**
- * Resolves the visual scale for a beat headline.
- * @param beat - The story beat.
- * @param beatIndex - The beat position inside its chapter.
- * @returns The headline scale.
+ * Assigns screen references from the template.
+ * @param element - Screen element or component ref.
+ * @param screenIndex - Screen index.
  */
-function getBeatHeadlineScale(beat: StoryBeat, beatIndex: number): BeatHeadlineScale {
-  const wordCount = beat.statement.split(" ").length;
-  return beatIndex === 0 && wordCount <= 7 ? "primary" : wordCount >= 6 ? "quiet" : "secondary";
+function setScreenElement(element: Element | null, screenIndex: number): void {
+  if (!(element instanceof HTMLElement)) return;
+  screenElements.value[screenIndex] = element;
 }
 
 /**
- * Scrolls to the saved chapter.
+ * Creates a typed template ref callback for a screen.
+ * @param screenIndex - Screen index.
+ * @returns Template ref callback.
  */
-function continueStory(): void {
-  const targetElement = document.querySelector(continueHref.value);
-  if (!targetElement) return;
-  targetElement.scrollIntoView({ behavior: prefersReducedMotion.value ? "auto" : "smooth", block: "start" });
+function getScreenElementSetter(screenIndex: number): (element: Element | ComponentPublicInstance | null) => void {
+  return (element: Element | ComponentPublicInstance | null) => {
+    setScreenElement(element instanceof Element ? element : null, screenIndex);
+  };
 }
 
 /**
- * Initializes chapter-linked motion when allowed by user preference.
+ * Scrolls to a trailer screen.
+ * @param screenIndex - Destination screen index.
  */
-async function initializeMotion(): Promise<void> {
-  if (prefersReducedMotion.value) return;
-  const gsapModule = await import("gsap");
-  const scrollTriggerModule = await import("gsap/ScrollTrigger");
-  const lenisModule = await import("lenis");
-  const gsap = gsapModule.default;
-  const ScrollTrigger = scrollTriggerModule.ScrollTrigger;
-  const Lenis = lenisModule.default;
-  gsap.registerPlugin(ScrollTrigger);
-  const lenis = new Lenis({ autoRaf: false });
-  lenis.on("scroll", ScrollTrigger.update);
-  gsap.ticker.add((time: number) => {
-    lenis.raf(time * 1000);
-  });
-  gsap.ticker.lagSmoothing(0);
-  ScrollTrigger.create({
-    trigger: "#story-track",
-    start: "top top",
-    end: "bottom bottom",
-    scrub: true,
-    onUpdate: (scrollTrigger) => {
-      heroObject.value?.setShapeProgress(scrollTrigger.progress);
-      floatingHeroObject.value?.setShapeProgress(scrollTrigger.progress);
-    }
-  });
-  gsap.utils.toArray<HTMLElement>("[data-beat]").forEach((element) => {
-    const lines = element.querySelectorAll("[data-kinetic-line]");
-    gsap.fromTo(lines, { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, stagger: 0.08, ease: "power4.out", scrollTrigger: { trigger: element, start: "top 65%", end: "top 20%", scrub: 0.6 } });
+function goToScreen(screenIndex: number): void {
+  const screenElement = screenElements.value[screenIndex];
+  if (!screenElement) return;
+  screenElement.scrollIntoView({ behavior: prefersReducedMotion.value ? "auto" : "smooth", block: "start" });
+}
+
+/**
+ * Starts the trailer from the second screen.
+ */
+function startTrailer(): void {
+  goToScreen(1);
+}
+
+/**
+ * Moves to the next trailer screen.
+ */
+function goToNextScreen(): void {
+  goToScreen(Math.min(storyScreens.value.length - 1, activeScreenIndex.value + 1));
+}
+
+/**
+ * Replays the trailer from the beginning.
+ */
+function replayTrailer(): void {
+  goToScreen(0);
+}
+
+/**
+ * Continues from persisted story progress.
+ */
+function continueTrailer(): void {
+  goToScreen(savedScreenIndex.value);
+}
+
+/**
+ * Updates the object shape and persisted progress.
+ * @param screenIndex - Active screen index.
+ */
+function setActiveScreen(screenIndex: number): void {
+  activeScreenIndex.value = screenIndex;
+  floatingHeroObject.value?.setShapeProgress(storyScreens.value.length <= 1 ? 0 : screenIndex / (storyScreens.value.length - 1));
+  const activeScreen = storyScreens.value[screenIndex];
+  if (!activeScreen) return;
+  rememberChapter(activeScreen.path);
+}
+
+/**
+ * Updates the particle object from pointer position.
+ * @param pointerEvent - Pointer event.
+ */
+function updatePointerPosition(pointerEvent: PointerEvent): void {
+  const horizontalPosition = (pointerEvent.clientX / window.innerWidth) * 2 - 1;
+  const verticalPosition = (pointerEvent.clientY / window.innerHeight) * 2 - 1;
+  floatingHeroObject.value?.setPointerPosition(horizontalPosition, verticalPosition);
+}
+
+/**
+ * Initializes screen observation.
+ */
+async function initializeScreens(): Promise<void> {
+  await nextTick();
+  screenObserver.value?.disconnect();
+  screenObserver.value = new IntersectionObserver((entries) => {
+    const visibleEntry = entries.sort((firstEntry, secondEntry) => secondEntry.intersectionRatio - firstEntry.intersectionRatio)[0];
+    if (!visibleEntry?.isIntersecting) return;
+    const screenIndex = Number((visibleEntry.target as HTMLElement).dataset.screenIndex || "0");
+    setActiveScreen(screenIndex);
+  }, { threshold: [0.55, 0.7] });
+  screenElements.value.forEach((screenElement) => {
+    screenObserver.value?.observe(screenElement);
   });
 }
 
 onMounted(async () => {
-  await initializeMotion();
+  await initializeScreens();
+  floatingHeroObject.value?.setShapeProgress(0);
+});
+
+onBeforeUnmount(() => {
+  screenObserver.value?.disconnect();
 });
 </script>
 
 <template>
-  <main id="story-track" class="relative bg-paper pt-24">
+  <main class="relative min-h-screen overflow-x-hidden bg-paper pt-16" @pointermove="updatePointerPosition">
     <ClientOnly>
-      <div class="pointer-events-none fixed inset-0 z-10 hidden opacity-25 mix-blend-multiply motion-reduce:hidden md:block">
-        <HeroObject ref="floatingHeroObject" floating />
+      <div class="pointer-events-none fixed inset-0 z-0 opacity-25 mix-blend-multiply motion-reduce:hidden">
+        <HeroObject ref="floatingHeroObject" floating interactive />
       </div>
     </ClientOnly>
 
-    <section id="chapter-00-hero" class="relative z-20 mx-auto grid min-h-[calc(100vh-6rem)] max-w-[1600px] items-center gap-10 px-4 py-12 md:grid-cols-[1.05fr_0.95fr] md:px-8">
-      <div>
-        <p class="font-mono text-xs uppercase tracking-[0.28em] text-violet-700">00 / Hero</p>
-        <h1 class="mt-5 max-w-5xl overflow-visible text-[clamp(4rem,11vw,11rem)] font-extrabold leading-[0.88] tracking-[-0.04em]">
-          <span data-kinetic-line class="block">The</span>
-          <span data-kinetic-line class="block">handover</span>
-          <span data-kinetic-line class="block">I wish</span>
-          <span data-kinetic-line class="block">could scroll.</span>
-        </h1>
-        <p class="mt-8 max-w-2xl text-xl leading-8 text-muted md:text-2xl">Facts stay grounded. Story stays cinematic. Docs carry the depth.</p>
-        <div class="mt-10 flex flex-wrap gap-3">
-          <button v-if="hasProgress" class="rounded-full bg-ink px-5 py-3 font-mono text-xs uppercase tracking-[0.18em] text-paper transition hover:bg-violet-700" @click="continueStory">Continue the story</button>
-          <NuxtLink to="/docs/aida-architecture" class="rounded-full border border-ink/15 px-5 py-3 font-mono text-xs uppercase tracking-[0.18em] text-ink transition hover:border-violet-500 hover:text-violet-700">Dive into reference docs</NuxtLink>
+    <div class="fixed left-0 right-0 top-0 z-50 h-1 bg-ink/10">
+      <div class="h-full bg-violet-500 transition-all duration-500" :style="{ width: `${progressPercentage}%` }" />
+    </div>
+
+    <nav class="fixed left-4 right-4 top-4 z-50 flex items-center justify-between gap-4 rounded-full border border-ink/10 bg-paper/75 px-4 py-3 backdrop-blur md:left-8 md:right-8">
+      <button v-if="hasProgress" class="hidden rounded-full bg-ink px-4 py-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-paper transition hover:bg-violet-700 md:block" @click="continueTrailer">Continue</button>
+      <NuxtLink v-else to="/docs/aida-architecture" class="hidden rounded-full bg-ink px-4 py-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-paper transition hover:bg-violet-700 md:block">Explore</NuxtLink>
+      <div class="mx-auto flex items-center gap-3">
+        <button v-for="(screen, screenIndex) in storyScreens" :key="screen.path" :class="dotButtonStyle({ active: activeScreenIndex === screenIndex })" :aria-label="`Go to ${screen.title}`" @click="goToScreen(screenIndex)" />
+      </div>
+      <NuxtLink to="/docs/aida-architecture" class="rounded-full border border-ink/10 px-4 py-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ink transition hover:border-violet-500 hover:text-violet-700">Explore</NuxtLink>
+    </nav>
+
+    <section v-for="(screen, screenIndex) in storyScreens" :id="`story-screen-${screen.order || screenIndex}`" :key="screen.path" :ref="getScreenElementSetter(screenIndex)" :data-screen-index="screenIndex" data-story-screen class="relative z-10 grid min-h-screen scroll-mt-0 grid-rows-[auto_minmax(0,1fr)] gap-4 px-4 pb-5 pt-24 md:px-8 md:pb-6 md:pt-24">
+      <div class="grid min-h-0 gap-4 md:grid-cols-[minmax(0,1.05fr)_minmax(28rem,0.95fr)] md:items-end">
+        <div class="min-w-0">
+          <p class="font-mono text-xs uppercase tracking-[0.28em] text-violet-700">{{ screen.chapter }} / {{ screen.title }}</p>
+          <h1 class="mt-3 max-w-[12ch] text-[clamp(3.3rem,8.8vw,8.8rem)] font-extrabold leading-[0.95] tracking-[-0.04em] text-ink md:max-w-[10.5ch]">
+            {{ screen.headline }}
+          </h1>
+        </div>
+        <div class="min-w-0 md:pb-5">
+          <p class="max-w-2xl text-[clamp(1.05rem,2vw,1.75rem)] leading-tight text-muted">{{ screen.subline }}</p>
+          <NuxtLink v-if="screen.toy?.linkTo" :to="screen.toy.linkTo" class="mt-5 inline-flex rounded-full bg-violet-500 px-5 py-3 font-mono text-xs uppercase tracking-[0.18em] text-paper transition hover:bg-violet-700">
+            {{ screen.toy.linkLabel || "the real version" }} →
+          </NuxtLink>
         </div>
       </div>
-      <ClientOnly>
-        <HeroObject ref="heroObject" />
-        <template #fallback><div class="grid h-[34rem] place-items-center rounded-[2.5rem] border border-ink/10 bg-violet-50 text-8xl font-black tracking-[-0.08em] text-violet-700">Y</div></template>
-      </ClientOnly>
-    </section>
-
-    <section class="relative z-20 mx-auto grid max-w-[1600px] gap-4 px-4 py-16 md:grid-cols-4 md:px-8">
-      <StatCounter :value="24" label="CVC component categories" />
-      <StatCounter :value="62" label="CVC component folders" />
-      <StatCounter :value="48" label="Planning tickets" />
-      <StatCounter :value="13" label="Planning epics" />
-    </section>
-
-    <section class="relative z-20 mx-auto max-w-[1600px] px-4 py-12 md:px-8">
-      <div class="grid gap-5 md:grid-cols-5">
-        <figure v-for="screen in ['aida', 'aida-demo', 'aida-planning', 'common-vue-components', 'common-vue-components-demo']" :key="screen" class="rounded-[2rem] border border-ink/10 bg-ink p-3 shadow-editorial">
-          <div class="mb-3 flex gap-1.5 px-2 pt-1"><span class="h-2.5 w-2.5 rounded-full bg-violet-500" /><span class="h-2.5 w-2.5 rounded-full bg-violet-400" /><span class="h-2.5 w-2.5 rounded-full bg-violet-100" /></div>
-          <img :src="`/screens/${screen}.png`" :alt="`${screen} screenshot`" class="aspect-[16/10] w-full rounded-[1.4rem] object-cover" @error="($event.target as HTMLImageElement).src = '/screens/placeholder.svg'" />
-          <figcaption class="px-2 py-3 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-paper/70">{{ screen.replaceAll("-", " ") }}</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <section v-for="document in resolvedStoryDocuments" :id="`chapter-${document.chapter || document.path.replace('/story/', '')}`" :key="document.path" class="relative z-20 border-t border-ink/10" @mouseenter="rememberChapter(document.path)">
-      <div class="mx-auto grid max-w-[1600px] gap-8 px-4 py-16 md:grid-cols-[0.36fr_1.64fr] md:px-8">
-        <div class="md:sticky md:top-28 md:self-start">
-          <p class="font-mono text-xs uppercase tracking-[0.28em] text-violet-700">{{ document.chapter }}</p>
-          <h2 class="mt-4 max-w-[10rem] text-[clamp(1.5rem,2vw,2.35rem)] font-bold leading-[1.02] tracking-[-0.03em] text-ink/70">{{ document.title }}</h2>
-          <p v-if="document.note" class="mt-6 max-w-[14rem] font-hand text-2xl leading-7 text-violet-700/80">{{ document.note }}</p>
-        </div>
-        <div>
-          <article v-for="(beat, beatIndex) in document.beats || []" :key="`${document.path}-${beatIndex}`" data-beat class="grid min-h-screen items-center gap-8 py-12 md:grid-cols-[minmax(0,1fr)_minmax(22rem,0.86fr)]">
-            <div>
-              <p class="font-mono text-[0.68rem] uppercase tracking-[0.24em] text-violet-700">{{ document.chapter }} · {{ String(beatIndex + 1).padStart(2, "0") }}</p>
-              <h3 :class="beatHeadlineStyle({ scale: getBeatHeadlineScale(beat, beatIndex) })">
-                <span v-for="(line, lineIndex) in beat.statement.split(' ')" :key="`${beat.statement}-${line}-${lineIndex}`" data-kinetic-line class="min-w-0 break-words">{{ line }}</span>
-              </h3>
-              <p v-if="beat.support" class="mt-8 max-w-2xl text-xl leading-8 text-muted md:text-2xl">{{ beat.support }}</p>
-              <p v-if="beat.note" class="mt-8 font-hand text-4xl leading-10 text-violet-700">{{ beat.note }}</p>
-            </div>
-            <StoryBeatVisual :visual="beat.visual" :chapter="document.chapter" />
-          </article>
-          <div v-if="document.links && document.links.length > 0" class="flex min-h-[40vh] flex-wrap items-center justify-center gap-3 border-t border-ink/10 py-16">
-            <NuxtLink v-for="link in document.links" :key="link.to" :to="link.to" class="rounded-full bg-violet-500 px-5 py-3 font-mono text-xs uppercase tracking-[0.18em] text-paper no-underline transition hover:bg-violet-700">Dive deeper → {{ link.label }}</NuxtLink>
-          </div>
-        </div>
-      </div>
+      <StoryToy :toy="screen.toy" :order="screen.order || screenIndex" @start="startTrailer" @next="goToNextScreen" @replay="replayTrailer" />
     </section>
   </main>
 </template>

@@ -32,13 +32,20 @@ interface HeroObjectProperties {
    * Whether the object is displayed as a small recurring story motif.
    */
   floating?: boolean;
+
+  /**
+   * Whether pointer movement repels the particle field.
+   */
+  interactive?: boolean;
 }
 
 const properties = withDefaults(defineProps<HeroObjectProperties>(), {
-  floating: false
+  floating: false,
+  interactive: false
 });
 
 const shapeProgress = ref<number>(0);
+const pointerPosition = ref<Vector3>(new Vector3(0, 0, 0));
 const particleCount = 84;
 const cameraPosition = new Vector3(0, 0, 5);
 const lightPosition = new Vector3(2, 4, 6);
@@ -63,11 +70,14 @@ const particles = computed<ParticlePosition[]>(() => Array.from({ length: partic
   const handover = new Vector3((particleIndex % 2 === 0 ? -1.5 : 1.5) + Math.cos(angle) * 0.65, Math.sin(angle) * 0.9, wave * 0.55);
   const shapes = [letterY, chart, blocks, bridge, handover];
   const vector = shapes[Math.min(storyShape, shapes.length - 1)] || letterY;
+  const distance = vector.distanceTo(pointerPosition.value);
+  const pointerForce = properties.interactive ? Math.max(0, 1.6 - distance) * 0.28 : 0;
+  const pointerVector = vector.clone().sub(pointerPosition.value).normalize().multiplyScalar(pointerForce);
   const scale = 0.22 + Math.abs(wave) * 0.08;
 
   return {
     key: `particle-${particleIndex}`,
-    position: vector,
+    position: vector.clone().add(pointerVector),
     scale: new Vector3(scale, scale, scale)
   };
 }));
@@ -80,7 +90,16 @@ function setShapeProgress(progress: number): void {
   shapeProgress.value = progress;
 }
 
-defineExpose({ setShapeProgress });
+/**
+ * Updates pointer influence in normalized viewport space.
+ * @param horizontalPosition - Horizontal pointer position from minus one to one.
+ * @param verticalPosition - Vertical pointer position from minus one to one.
+ */
+function setPointerPosition(horizontalPosition: number, verticalPosition: number): void {
+  pointerPosition.value = new Vector3(horizontalPosition * 2.2, verticalPosition * -1.6, 0);
+}
+
+defineExpose({ setShapeProgress, setPointerPosition });
 </script>
 
 <template>
@@ -89,7 +108,7 @@ defineExpose({ setShapeProgress });
       <TresPerspectiveCamera :position="cameraPosition" :look-at="new Vector3(0, 0, 0)" />
       <TresAmbientLight :intensity="1.4" />
       <TresDirectionalLight :position="lightPosition" :intensity="1.8" />
-      <TresGroup :rotation="[0.25, shapeProgress * 1.4, 0.05]">
+      <TresGroup :rotation="[0.25 + pointerPosition.y * 0.08, shapeProgress * 1.4 + pointerPosition.x * 0.12, 0.05]">
         <TresMesh v-for="particle in particles" :key="particle.key" :position="particle.position" :scale="particle.scale">
           <TresBoxGeometry :args="[1, 1, 1]" />
           <TresMeshStandardMaterial color="#6D3BFF" :roughness="0.32" :metalness="0.18" />
