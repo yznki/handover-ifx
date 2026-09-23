@@ -38,11 +38,11 @@ function closeSidebar(): void {
 </script>
 
 <template>
-  <main class="mx-auto grid max-w-[1760px] gap-8 px-4 pb-20 pt-24 sm:px-6 xl:grid-cols-[18rem_minmax(0,980px)]">
+  <main class="mx-auto grid max-w-[1760px] gap-8 px-4 pb-20 pt-24 sm:px-6 lg:grid-cols-[18rem_minmax(0,1fr)]">
     <DocsSidebar :pages="navigationDocuments" current-path="/docs" :open="isSidebarOpen" @close="closeSidebar" />
 
-    <section class="min-w-0">
-      <button class="mb-5 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/55 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted shadow-sm xl:hidden" type="button" @click="openSidebar">
+    <section class="mx-auto w-full max-w-[980px] min-w-0">
+      <button class="mb-5 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/55 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted shadow-sm lg:hidden" type="button" @click="openSidebar">
         Browse docs
       </button>
 

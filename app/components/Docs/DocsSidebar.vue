@@ -39,7 +39,7 @@ const properties = withDefaults(defineProps<DocsSidebarProperties>(), {
 });
 const emit = defineEmits<DocsSidebarEmits>();
 
-const drawerStyle = cva("fixed inset-y-0 left-0 z-[70] w-[min(88vw,22rem)] border-r border-ink/10 bg-paper/95 px-4 pb-8 pt-24 shadow-2xl backdrop-blur-xl transition xl:hidden", {
+const drawerStyle = cva("fixed inset-y-0 left-0 z-[70] w-[min(88vw,22rem)] border-r border-ink/10 bg-paper/95 px-4 pb-8 pt-24 shadow-2xl backdrop-blur-xl transition lg:hidden", {
   variants: {
     open: {
       true: "translate-x-0",
@@ -93,7 +93,7 @@ function closeDrawer(): void {
 </script>
 
 <template>
-  <aside class="hidden xl:block">
+  <aside class="hidden lg:block">
     <nav class="sticky top-20 max-h-[calc(100svh-6rem)] overflow-y-auto border-r border-ink/10 pr-4 [scrollbar-width:thin]">
       <NuxtLink to="/docs" class="mb-3 flex items-center gap-3 rounded-2xl border border-ink/10 bg-white/45 px-3 py-2 text-sm font-semibold tracking-[-0.01em] text-ink transition hover:border-violet-300 hover:bg-violet-50">
         <span class="grid h-7 w-7 place-items-center rounded-xl bg-ink text-xs text-paper">↗</span>
@@ -112,7 +112,7 @@ function closeDrawer(): void {
   </aside>
 
   <Teleport to="body">
-    <div v-if="open" class="fixed inset-0 z-[65] bg-ink/20 backdrop-blur-sm xl:hidden" @click="closeDrawer" />
+    <div v-if="open" class="fixed inset-0 z-[65] bg-ink/20 backdrop-blur-sm lg:hidden" @click="closeDrawer" />
     <nav :class="resolvedDrawerStyle" aria-label="Documentation drawer">
       <div class="mb-5 flex items-center justify-between">
         <p class="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-violet-700">Explore</p>
