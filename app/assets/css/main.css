@@ -29,28 +29,6 @@ body {
   font-family: "Bricolage Grotesque", Geist, ui-sans-serif, system-ui;
 }
 
-.font-meme {
-  font-family: Anton, Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-}
-
-.shadow-hard {
-  box-shadow: 6px 6px 0 #151417;
-}
-
-.shadow-hard-lg {
-  box-shadow: 10px 10px 0 #151417;
-}
-
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 body,
 #__nuxt {
   min-height: 100%;
@@ -72,6 +50,21 @@ body::before {
 ::selection {
   background: #6d3bff;
   color: #f6f4ef;
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    rotate: 0deg;
+  }
+
+  30% {
+    rotate: -2deg;
+  }
+
+  70% {
+    rotate: 2deg;
+  }
 }
 
 .content-prose h1,

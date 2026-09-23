@@ -3,15 +3,14 @@ import { defineNuxtConfig } from "nuxt/config";
 export default defineNuxtConfig({
   compatibilityDate: "2026-09-23",
   devtools: { enabled: true },
-  modules: ["@nuxt/content", "@nuxtjs/tailwindcss", "@nuxt/fonts", "@tresjs/nuxt", "lenis/nuxt"],
+  modules: ["@nuxt/content", "@nuxtjs/tailwindcss", "@nuxt/fonts"],
   css: ["~/assets/css/main.css"],
   fonts: {
     families: [
       { name: "Geist", provider: "google", weights: ["400", "500", "600", "700", "800", "900"] },
       { name: "Geist Mono", provider: "google", weights: ["400", "500", "600", "700"] },
       { name: "Caveat", provider: "google", weights: ["500", "600", "700"] },
-      { name: "Bricolage Grotesque", provider: "google", weights: ["700", "800"] },
-      { name: "Anton", provider: "google", weights: ["400"] }
+      { name: "Bricolage Grotesque", provider: "google", weights: ["700", "800"] }
     ]
   },
   nitro: {
@@ -24,7 +23,7 @@ export default defineNuxtConfig({
     head: {
       title: "Yazan Kiswani — Infineon Handover",
       meta: [
-        { name: "description", content: "A cinematic, content-editable handover for AIDA, CVC, ValiBridge, CI/CD, access, and unfinished work." },
+        { name: "description", content: "A playful landing page for Yazan Kiswani's Infineon handover." },
         { name: "theme-color", content: "#F6F4EF" }
       ]
     }

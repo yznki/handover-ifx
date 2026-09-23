@@ -11,7 +11,7 @@ pnpm dev
 
 ## Edit content
 
-Story chapters live in `content/story`. Long-form reference pages live in `content/docs`. Glossary entries live in `content/glossary/index.md`. The site uses Nuxt Content, so most copy edits do not require touching Vue components.
+The landing page lives in `app/components/Home/PhysicsByeLanding.vue`. Long-form reference pages live in `content/docs`. Glossary entries live in `content/glossary/index.md`. The site uses Nuxt Content for reference material, so most handover copy edits do not require touching Vue components.
 
 ## Verify
 

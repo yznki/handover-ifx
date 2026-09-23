@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import MemeWall from "~/components/Meme/MemeWall.vue";
+import PhysicsByeLanding from "~/components/Home/PhysicsByeLanding.vue";
 </script>
 
 <template>
-  <MemeWall />
+  <PhysicsByeLanding />
 </template>
