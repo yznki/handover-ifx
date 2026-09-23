@@ -42,11 +42,11 @@ const shapeProgress = ref<number>(0);
 const particleCount = 84;
 const cameraPosition = new Vector3(0, 0, 5);
 const lightPosition = new Vector3(2, 4, 6);
-const rootStyle = cva("relative overflow-hidden", {
+const rootStyle = cva("relative", {
   variants: {
     floating: {
-      true: "h-[22rem] rounded-none border-0 bg-transparent shadow-none",
-      false: "h-[34rem] rounded-[2.5rem] border border-ink/10 bg-gradient-to-br from-violet-50 via-paper to-white shadow-editorial"
+      true: "h-screen w-screen overflow-visible rounded-none border-0 bg-transparent shadow-none",
+      false: "h-[34rem] overflow-hidden rounded-[2.5rem] border border-ink/10 bg-gradient-to-br from-violet-50 via-paper to-white shadow-editorial"
     }
   }
 });
@@ -85,7 +85,7 @@ defineExpose({ setShapeProgress });
 
 <template>
   <div :class="rootStyle({ floating: properties.floating })">
-    <TresCanvas clear-color="#F6F4EF" class="h-full w-full">
+    <TresCanvas :clear-color="properties.floating ? 'transparent' : '#F6F4EF'" :alpha="properties.floating" class="h-full w-full">
       <TresPerspectiveCamera :position="cameraPosition" :look-at="new Vector3(0, 0, 0)" />
       <TresAmbientLight :intensity="1.4" />
       <TresDirectionalLight :position="lightPosition" :intensity="1.8" />
