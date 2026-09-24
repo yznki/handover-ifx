@@ -54,11 +54,11 @@ const checkboxStyle = cva("grid h-5 w-5 shrink-0 place-items-center rounded-md b
   variants: {
     checked: {
       true: "border-violet-500 bg-violet-500 text-paper",
-      false: "border-ink/20 bg-white text-transparent"
+      false: "border-ink/20 bg-surface text-transparent"
     }
   }
 });
-const rowStyle = cva("grid gap-4 border-b border-ink/10 px-4 py-4 text-left transition hover:bg-white/45 sm:grid-cols-[auto_1fr_auto]", {
+const rowStyle = cva("grid gap-4 border-b border-ink/10 px-4 py-4 text-left transition hover:bg-surface/45 sm:grid-cols-[auto_1fr_auto]", {
   variants: {
     checked: {
       true: "bg-violet-50/45",
@@ -119,7 +119,7 @@ onMounted(() => {
       </div>
     </header>
 
-    <section v-for="group in groups" :key="group" class="mb-8 overflow-hidden rounded-3xl border border-ink/10 bg-white/30">
+    <section v-for="group in groups" :key="group" class="mb-8 overflow-hidden rounded-3xl border border-ink/10 bg-surface/30">
       <div class="border-b border-ink/10 px-4 py-3">
         <h2 class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink/50">{{ group }}</h2>
       </div>

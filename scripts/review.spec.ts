@@ -176,3 +176,49 @@ test("explore pages and checklist render refined chrome", async ({ page }) => {
 
   expect(consoleErrors).toEqual([]);
 });
+
+test("dark mode renders without flash", async ({ page }) => {
+  test.setTimeout(120_000);
+  const consoleErrors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") consoleErrors.push(message.text());
+  });
+
+  await page.addInitScript(() => {
+    localStorage.setItem("handover-theme", "dark");
+  });
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const desktopPages = [
+    { name: "home", path: "/" },
+    { name: "docs-index", path: "/docs" },
+    { name: "aida-architecture", path: "/docs/aida-architecture" },
+    { name: "checklist", path: "/checklist" }
+  ];
+
+  for (const targetPage of desktopPages) {
+    await page.goto(`http://127.0.0.1:4173${targetPage.path}`, { waitUntil: "domcontentloaded" });
+    await expect(page.locator("html")).toHaveClass(/dark/);
+    await page.waitForLoadState("networkidle");
+    await waitForSettledLocalRendering(page, targetPage.path === "/" ? 2_000 : 800);
+    await page.screenshot({ path: `${reviewDirectory}\\dark-${targetPage.name}-desktop.png`, fullPage: targetPage.path !== "/" });
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("http://127.0.0.1:4173/docs/aida-architecture", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("html")).toHaveClass(/dark/);
+  await page.waitForLoadState("networkidle");
+  await waitForSettledLocalRendering(page);
+  await page.screenshot({ path: `${reviewDirectory}\\dark-mobile-doc.png`, fullPage: false });
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("http://127.0.0.1:4173/docs", { waitUntil: "networkidle" });
+  await page.keyboard.press("Control+K");
+  const paletteThemeButton = page.getByRole("button", { name: "Theme Toggle dark mode Current: dark" });
+  await expect(paletteThemeButton).toBeVisible();
+  await page.screenshot({ path: `${reviewDirectory}\\dark-command-palette.png`, fullPage: false });
+  await paletteThemeButton.click();
+  await expect(page.locator("html")).not.toHaveClass(/dark/);
+
+  expect(consoleErrors).toEqual([]);
+});

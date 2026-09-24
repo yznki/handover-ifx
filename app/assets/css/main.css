@@ -4,16 +4,47 @@
 
 :root {
   color-scheme: light;
-  background: #f6f4ef;
-  color: #151417;
+  --color-paper: 246 244 239;
+  --color-ink: 21 20 23;
+  --color-muted: 111 106 98;
+  --color-surface: 255 255 255;
+  --color-hairline: 21 20 23;
+  --color-violet-50: 240 235 255;
+  --color-violet-100: 225 214 255;
+  --color-violet-300: 196 181 253;
+  --color-violet-400: 141 103 255;
+  --color-violet-500: 109 59 255;
+  --color-violet-600: 124 58 237;
+  --color-violet-700: 78 39 197;
+  --color-violet-900: 42 23 101;
   --violet: #6d3bff;
+  background: rgb(var(--color-paper));
+  color: rgb(var(--color-ink));
+}
+
+.dark {
+  color-scheme: dark;
+  --color-paper: 15 14 19;
+  --color-ink: 236 235 241;
+  --color-muted: 160 156 176;
+  --color-surface: 23 21 29;
+  --color-hairline: 42 39 51;
+  --color-violet-50: 42 31 65;
+  --color-violet-100: 55 43 86;
+  --color-violet-300: 196 181 253;
+  --color-violet-400: 167 139 250;
+  --color-violet-500: 167 139 250;
+  --color-violet-600: 196 181 253;
+  --color-violet-700: 196 181 253;
+  --color-violet-900: 237 233 254;
+  --violet: #a78bfa;
 }
 
 html {
   min-height: 100%;
   scroll-behavior: auto;
-  background: #f6f4ef;
-  background-image: radial-gradient(circle at 1px 1px, rgba(21, 20, 23, 0.035) 1px, transparent 0);
+  background: rgb(var(--color-paper));
+  background-image: radial-gradient(circle at 1px 1px, rgb(var(--color-ink) / 0.035) 1px, transparent 0);
   background-size: 5px 5px;
 }
 
@@ -23,7 +54,7 @@ body {
   min-width: 320px;
   overflow-x: hidden;
   background: transparent;
-  color: #151417;
+  color: rgb(var(--color-ink));
   font-family: Geist, ui-sans-serif, system-ui;
 }
 
@@ -34,7 +65,7 @@ body {
 body,
 #__nuxt {
   min-height: 100%;
-  background-color: #f6f4ef;
+  background-color: rgb(var(--color-paper));
 }
 
 body::before {
@@ -43,15 +74,20 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: 80;
-  opacity: 0.18;
+  opacity: 0.16;
   mix-blend-mode: multiply;
-  background-image: radial-gradient(circle at 1px 1px, rgba(21, 20, 23, 0.2) 1px, transparent 0);
+  background-image: radial-gradient(circle at 1px 1px, rgb(var(--color-ink) / 0.2) 1px, transparent 0);
   background-size: 5px 5px;
 }
 
+.dark body::before {
+  opacity: 0.08;
+  mix-blend-mode: screen;
+}
+
 ::selection {
-  background: #6d3bff;
-  color: #f6f4ef;
+  background: rgb(var(--color-violet-500));
+  color: rgb(var(--color-paper));
 }
 
 @keyframes wiggle {
@@ -86,7 +122,7 @@ body::before {
 
 .content-prose p,
 .content-prose li {
-  color: #39352f;
+  color: rgb(var(--color-ink) / 0.84);
   font-size: 1rem;
   line-height: 1.7;
 }
@@ -106,7 +142,7 @@ body::before {
 }
 
 .content-prose a {
-  color: #4e27c5;
+  color: rgb(var(--color-violet-700));
   text-decoration: underline;
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.2em;
@@ -121,7 +157,7 @@ body::before {
 
 .content-prose th,
 .content-prose td {
-  border-bottom: 1px solid rgba(21, 20, 23, 0.12);
+  border-bottom: 1px solid rgb(var(--color-hairline) / 0.45);
   padding: 0.68rem 0.75rem;
   text-align: left;
   vertical-align: top;
@@ -131,8 +167,8 @@ body::before {
   position: sticky;
   top: 0;
   z-index: 1;
-  background: #fbfaf7;
-  color: rgba(21, 20, 23, 0.72);
+  background: rgb(var(--color-surface) / 0.72);
+  color: rgb(var(--color-ink) / 0.72);
   font-family: "Geist Mono", ui-monospace;
   font-size: 0.68rem;
   letter-spacing: 0.12em;
@@ -141,8 +177,8 @@ body::before {
 
 .content-prose code {
   border-radius: 0.35rem;
-  background: rgba(21, 20, 23, 0.06);
-  color: #251f33;
+  background: rgb(var(--color-ink) / 0.06);
+  color: rgb(var(--color-ink) / 0.9);
   padding: 0.12rem 0.32rem;
   font-family: "Geist Mono", ui-monospace;
   font-size: 0.92em;

@@ -21,7 +21,7 @@ withDefaults(defineProps<ProseImageProperties>(), {
 </script>
 
 <template>
-  <figure class="my-8 overflow-hidden rounded-3xl border border-ink/10 bg-white/50 p-2 shadow-sm">
+  <figure class="my-8 overflow-hidden rounded-3xl border border-ink/10 bg-surface/50 p-2 shadow-sm">
     <a :href="src" target="_blank" rel="noreferrer">
       <img :src="src" :alt="alt" class="w-full rounded-2xl border border-ink/10" loading="lazy">
     </a>

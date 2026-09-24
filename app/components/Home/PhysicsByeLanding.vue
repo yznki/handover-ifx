@@ -3,6 +3,7 @@ import { navigateTo } from "#app";
 import { useMediaQuery } from "@vueuse/core";
 import { cva } from "class-variance-authority";
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { useTheme } from "~/composables/useTheme/useTheme";
 
 /**
  * Single physics letter state.
@@ -213,6 +214,7 @@ const enterButtonStyle = cva("rounded-full border-2 border-ink bg-paper px-7 py-
 
 const reducedMotionPreference = useMediaQuery("(prefers-reduced-motion: reduce)");
 const coarsePointerPreference = useMediaQuery("(pointer: coarse)");
+const { isDark, toggleTheme } = useTheme();
 
 const stageElement = ref<HTMLElement | null>(null);
 const letters = ref<PhysicsLetter[]>([]);
@@ -829,6 +831,13 @@ function toggleSound(): void {
 }
 
 /**
+ * Toggles dark mode on the landing page.
+ */
+function handleToggleTheme(): void {
+  toggleTheme();
+}
+
+/**
  * Navigates to the docs entrypoint.
  */
 function enterHandover(): void {
@@ -918,9 +927,14 @@ onBeforeUnmount(() => {
       thrown: {{ thrownCount }}
     </p>
 
-    <button class="absolute bottom-28 right-5 z-20 font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink/35 transition hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500 sm:bottom-10" type="button" @click="toggleSound">
-      sound: {{ soundEnabled ? "on" : "off" }}
-    </button>
+    <div class="absolute bottom-28 right-5 z-20 flex flex-col items-end gap-2 sm:bottom-10">
+      <button class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink/35 transition hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500" type="button" @click="toggleSound">
+        sound: {{ soundEnabled ? "on" : "off" }}
+      </button>
+      <button class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink/35 transition hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500" type="button" :aria-pressed="isDark" title="Toggle dark mode" @click="handleToggleTheme">
+        dark: {{ isDark ? "on" : "off" }}
+      </button>
+    </div>
 
     <div class="pointer-events-none absolute inset-0">
       <span

@@ -42,7 +42,7 @@ function closeSidebar(): void {
     <DocsSidebar :pages="navigationDocuments" current-path="/docs" :open="isSidebarOpen" @close="closeSidebar" />
 
     <section class="mx-auto w-full max-w-[980px] min-w-0">
-      <button class="mb-5 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/55 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted shadow-sm lg:hidden" type="button" @click="openSidebar">
+      <button class="mb-5 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-surface/55 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted shadow-sm lg:hidden" type="button" @click="openSidebar">
         Browse docs
       </button>
 
@@ -62,7 +62,7 @@ function closeSidebar(): void {
       </NuxtLink>
 
       <div class="grid gap-4 md:grid-cols-2">
-        <NuxtLink v-for="section in sectionCards" :key="section.identifier" :to="section.pages[0]?.path || '/docs'" class="group rounded-3xl border border-ink/10 bg-white/35 p-5 transition hover:-translate-y-0.5 hover:border-violet-300 hover:bg-white/60">
+        <NuxtLink v-for="section in sectionCards" :key="section.identifier" :to="section.pages[0]?.path || '/docs'" class="group rounded-3xl border border-ink/10 bg-surface/35 p-5 transition hover:-translate-y-0.5 hover:border-violet-300 hover:bg-surface/60">
           <div class="mb-4 flex items-center justify-between">
             <span :class="sectionDotStyle({ section: section.identifier })" />
             <span class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ink/40">{{ section.pages.length }} {{ section.pages.length === 1 ? "page" : "pages" }}</span>

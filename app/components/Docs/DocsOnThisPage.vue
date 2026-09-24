@@ -130,7 +130,7 @@ onBeforeUnmount(() => {
           </a>
         </nav>
       </section>
-      <section class="mt-8 rounded-2xl border border-ink/10 bg-white/35 p-4">
+      <section class="mt-8 rounded-2xl border border-ink/10 bg-surface/35 p-4">
         <dl class="grid gap-3">
           <div v-for="item in metaItems" :key="item.label">
             <dt class="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ink/40">{{ item.label }}</dt>

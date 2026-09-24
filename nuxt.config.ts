@@ -5,6 +5,18 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@nuxt/content", "@nuxtjs/tailwindcss", "@nuxt/fonts"],
   css: ["~/assets/css/main.css"],
+  content: {
+    build: {
+      markdown: {
+        highlight: {
+          theme: {
+            default: "github-light",
+            dark: "github-dark"
+          }
+        }
+      }
+    }
+  },
   fonts: {
     families: [
       { name: "Geist", provider: "google", weights: ["400", "500", "600", "700", "800", "900"] },
@@ -30,6 +42,11 @@ export default defineNuxtConfig({
         { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
         { rel: "icon", sizes: "32x32", href: "/favicon.ico" },
         { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" }
+      ],
+      script: [
+        {
+          innerHTML: "(() => { try { const stored = localStorage.getItem('handover-theme'); const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches; const dark = stored ? stored === 'dark' : systemDark; document.documentElement.classList.toggle('dark', dark); document.documentElement.dataset.theme = dark ? 'dark' : 'light'; } catch (error) {} })();"
+        }
       ]
     }
   },

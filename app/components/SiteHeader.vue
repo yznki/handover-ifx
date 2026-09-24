@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { cva } from "class-variance-authority";
+import ThemeToggle from "~/components/Interactive/ThemeToggle.vue";
 
 const isNavigationOpen = ref<boolean>(false);
 
@@ -40,7 +41,8 @@ function toggleNavigation(): void {
         <NuxtLink v-for="link in navigationLinks" :key="link.to" :to="link.to" class="rounded-full px-3 py-2 text-sm font-medium text-muted transition hover:bg-ink/[0.04] hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500">
           {{ link.label }}
         </NuxtLink>
-        <button data-command-palette-trigger class="ml-2 inline-flex items-center gap-3 rounded-full border border-ink/10 bg-white/35 px-3 py-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-muted transition hover:border-violet-300 hover:bg-white/70 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500" type="button">
+        <ThemeToggle />
+        <button data-command-palette-trigger class="ml-1 inline-flex items-center gap-3 rounded-full border border-ink/10 bg-surface/35 px-3 py-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-muted transition hover:border-violet-300 hover:bg-surface/70 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500" type="button">
           <span>Search docs…</span>
           <kbd class="rounded-md border border-ink/10 bg-paper px-1.5 py-0.5 text-[0.62rem]">Ctrl K</kbd>
         </button>
@@ -55,6 +57,9 @@ function toggleNavigation(): void {
       <NuxtLink v-for="link in navigationLinks" :key="link.to" :to="link.to" class="block rounded-xl px-4 py-3 text-sm font-medium text-muted hover:bg-violet-50 hover:text-violet-700" @click="toggleNavigation">
         {{ link.label }}
       </NuxtLink>
+      <div class="px-4 py-3">
+        <ThemeToggle />
+      </div>
       <button data-command-palette-trigger class="mt-1 w-full rounded-xl border border-ink/10 px-4 py-3 text-left font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted" type="button">
         Search docs… Ctrl K
       </button>

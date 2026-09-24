@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { cva } from "class-variance-authority";
+import { useTheme } from "~/composables/useTheme/useTheme";
 
 /**
  * A searchable content section.
@@ -24,6 +25,7 @@ interface SearchSection {
 
 const isOpen = ref<boolean>(false);
 const searchTerm = ref<string>("");
+const { isDark, toggleTheme } = useTheme();
 const { data: sections } = await useAsyncData("command-palette-search", () => queryCollectionSearchSections("documents"));
 
 const paletteStyle = cva("fixed inset-0 z-[90] grid place-items-start bg-ink/20 px-4 pt-24 backdrop-blur-sm transition", {
@@ -102,6 +104,11 @@ onMounted(() => {
         <input id="command-search" v-model="searchTerm" class="w-full bg-transparent text-base outline-none placeholder:text-muted" placeholder="Search docs… Ctrl K" />
       </div>
       <div class="max-h-[60vh] overflow-y-auto p-2">
+        <button class="group grid w-full gap-2 rounded-2xl p-4 text-left transition hover:bg-violet-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500" type="button" @click="toggleTheme">
+          <span class="font-mono text-[0.64rem] uppercase tracking-[0.18em] text-violet-700">Theme</span>
+          <span class="text-base font-semibold tracking-[-0.01em] text-ink">Toggle dark mode</span>
+          <span class="line-clamp-2 text-sm leading-6 text-muted">Current: {{ isDark ? "dark" : "light" }}</span>
+        </button>
         <button v-for="section in filteredSections" :key="section.id" class="group grid w-full gap-2 rounded-2xl p-4 text-left transition hover:bg-violet-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500" type="button" @click="selectSection(section.id)">
           <span class="font-mono text-[0.64rem] uppercase tracking-[0.18em] text-violet-700">{{ section.id }}</span>
           <span class="text-base font-semibold tracking-[-0.01em] text-ink">{{ section.title }}</span>

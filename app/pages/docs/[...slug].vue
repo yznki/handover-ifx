@@ -111,7 +111,7 @@ function closeSidebar(): void {
     <DocsSidebar :pages="navigationDocuments" :current-path="path" :open="isSidebarOpen" @close="closeSidebar" />
 
     <section class="mx-auto w-full max-w-[72ch] min-w-0 xl:max-w-none">
-      <button class="mb-5 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/55 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted shadow-sm lg:hidden" type="button" @click="openSidebar">
+      <button class="mb-5 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-surface/55 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted shadow-sm lg:hidden" type="button" @click="openSidebar">
         Browse docs
       </button>
 
@@ -133,12 +133,12 @@ function closeSidebar(): void {
         </div>
 
         <nav class="mt-14 grid gap-3 border-t border-ink/10 pt-6 sm:grid-cols-2" aria-label="Previous and next pages">
-          <NuxtLink v-if="previousPage" :to="previousPage.path" class="group rounded-2xl border border-ink/10 bg-white/35 p-4 transition hover:border-violet-300 hover:bg-violet-50">
+          <NuxtLink v-if="previousPage" :to="previousPage.path" class="group rounded-2xl border border-ink/10 bg-surface/35 p-4 transition hover:border-violet-300 hover:bg-violet-50">
             <span class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ink/40">Previous</span>
             <span class="mt-2 block font-semibold tracking-[-0.01em] text-ink group-hover:text-violet-700">{{ previousPage.title }}</span>
           </NuxtLink>
           <div v-else />
-          <NuxtLink v-if="nextPage" :to="nextPage.path" class="group rounded-2xl border border-ink/10 bg-white/35 p-4 text-right transition hover:border-violet-300 hover:bg-violet-50">
+          <NuxtLink v-if="nextPage" :to="nextPage.path" class="group rounded-2xl border border-ink/10 bg-surface/35 p-4 text-right transition hover:border-violet-300 hover:bg-violet-50">
             <span class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ink/40">Next</span>
             <span class="mt-2 block font-semibold tracking-[-0.01em] text-ink group-hover:text-violet-700">{{ nextPage.title }}</span>
           </NuxtLink>

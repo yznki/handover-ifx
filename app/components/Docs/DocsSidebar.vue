@@ -95,7 +95,7 @@ function closeDrawer(): void {
 <template>
   <aside class="hidden lg:block">
     <nav class="sticky top-20 max-h-[calc(100svh-6rem)] overflow-y-auto border-r border-ink/10 pr-4 [scrollbar-width:thin]">
-      <NuxtLink to="/docs" class="mb-3 flex items-center gap-3 rounded-2xl border border-ink/10 bg-white/45 px-3 py-2 text-sm font-semibold tracking-[-0.01em] text-ink transition hover:border-violet-300 hover:bg-violet-50">
+      <NuxtLink to="/docs" class="mb-3 flex items-center gap-3 rounded-2xl border border-ink/10 bg-surface/45 px-3 py-2 text-sm font-semibold tracking-[-0.01em] text-ink transition hover:border-violet-300 hover:bg-violet-50">
         <span class="grid h-7 w-7 place-items-center rounded-xl bg-ink text-xs text-paper">↗</span>
         Explore index
       </NuxtLink>
@@ -120,7 +120,7 @@ function closeDrawer(): void {
           Close
         </button>
       </div>
-      <NuxtLink to="/docs" class="mb-5 block rounded-2xl border border-ink/10 bg-white/55 px-4 py-3 text-sm font-semibold" @click="closeDrawer">
+      <NuxtLink to="/docs" class="mb-5 block rounded-2xl border border-ink/10 bg-surface/55 px-4 py-3 text-sm font-semibold" @click="closeDrawer">
         Explore index
       </NuxtLink>
       <section v-for="section in documentationSections" :key="section.identifier" class="mb-6">
