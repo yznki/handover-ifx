@@ -18,6 +18,10 @@ A version meant for an integration branch before stable release, such as CVC `0.
 
 Infineon's OpenShift hosting environment used for AIDA, the planning hub, CVC showcase, and the playground namespace mentioned in the handover.
 
+## Handover site
+
+This Nuxt static site, live at `yazi-kamikazi-handover.icp.infineon.com` in HICP playground namespace `play-yazi-kamikazi` on EU-AT-4 until around 2026-12-22.
+
 ## Helm
 
 The Kubernetes packaging tool used by the CI pipelines to deploy applications and routes to OpenShift.

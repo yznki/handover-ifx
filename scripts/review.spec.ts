@@ -193,7 +193,7 @@ test("explore pages and checklist render refined chrome", async ({ page }) => {
 
   await page.goto("http://127.0.0.1:4173/checklist", { waitUntil: "networkidle" });
   await expect(page.getByRole("heading", { name: "Handover checklist" })).toBeVisible();
-  await page.getByRole("button", { name: /Split showcase/ }).click();
+  await page.getByRole("button", { name: /Review & merge AIDA !50/ }).click();
   await waitForSettledLocalRendering(page);
   await page.screenshot({ path: `${reviewDirectory}\\explore-desktop-checklist.png`, fullPage: true });
 
@@ -271,6 +271,7 @@ test("polish audit interactions work", async ({ page }) => {
   await page.getByRole("button", { name: /Search docs/ }).click();
   await expect(page.locator("#command-search")).toBeFocused();
   await page.locator("#command-search").fill("insecure-skip-tls-verify");
+  await expect(page.getByRole("dialog", { name: "Search docs" }).getByRole("button", { name: /Toggle dark mode/ })).toHaveCount(0);
   await expect(page.locator("mark").first()).toContainText("insecure-skip-tls-verify", { ignoreCase: true });
   await page.keyboard.press("Enter");
   await page.waitForURL("**/docs/**", { timeout: 5_000 });
@@ -291,6 +292,9 @@ test("polish audit interactions work", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Before I leave" })).toBeVisible();
   await expect(page.getByText("Uqba + Sandro").first()).toBeVisible();
   await expect(page.locator(".rounded-full", { hasText: "Uqba + Sandro" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /Review & merge AIDA !50/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Run Fri 25 walkthrough sessions/ })).toBeVisible();
+  await expect(page.getByText("Uqba · Kevin")).toHaveCount(1);
 
   await page.goto("http://127.0.0.1:4173/", { waitUntil: "networkidle" });
   await expect(page.getByRole("link", { name: "skip →" })).toHaveCount(0);
@@ -342,6 +346,7 @@ test("full light and dark visual audit", async ({ page }) => {
   await page.goto("http://127.0.0.1:4173/docs", { waitUntil: "networkidle" });
   await page.keyboard.press("Control+K");
   await page.locator("#command-search").fill("Jira token");
+  await expect(page.getByRole("dialog", { name: "Search docs" }).getByRole("button", { name: /Toggle dark mode/ })).toHaveCount(0);
   await waitForSettledLocalRendering(page, 300);
   await page.screenshot({ path: `${reviewDirectory}\\audit-command-palette-search.png`, fullPage: false });
 

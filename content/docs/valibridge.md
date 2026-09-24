@@ -25,7 +25,7 @@ ValiBridge stays intentionally short because Uqba and Sandro already know the do
 
 ## Handover actions
 
-The two important reminders are in the checklist: Sandro merges or continues the 4026 epic, and the team remembers that 3677 is pushed but unmerged. The decisions file also says local feature branches and stashes can be cleaned up.
+The two important reminders are in the checklist: Sandro merges or continues the 4026 epic, and the team remembers that 3677 is pushed but unmerged. Local feature branches and stashes on Yazan's machine have been cleaned up; nothing remote changed for ValiBridge.
 
 ## What this page does not do
 

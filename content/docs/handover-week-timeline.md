@@ -4,7 +4,7 @@ description: 'The handover-week sequence, walkthrough timing, cleanup window, an
 order: 2
 section: 'start'
 owner: 'Yazan'
-updated: '2026-09-23'
+updated: '2026-09-24'
 ---
 
 # Timeline for handover week
@@ -14,8 +14,8 @@ The decisions file gives the handover week plan. This page keeps it visible with
 | Date | Focus | Notes |
 | --- | --- | --- |
 | Wed 2026-09-23 | Build site and content review | Start from decisions file and real repositories. The site must be accurate before it is beautiful, but design quality is a top priority. |
-| Thu 2026-09-24 | Continue content review and cleanup | Cleanup after site build: showcase split, dead branches/stashes, Jira PAT rotation, CVC CLAUDE.md consumer list fix. |
-| Fri 2026-09-25 | Deploy and walkthroughs | Deploy the site. Run Uqba AIDA walkthrough. Run Sandro/Uqba CVC and CI/CD session where they do a release while watched. |
+| Thu 2026-09-24 | Continue content review and cleanup | Site deployed. Former `showcase/aida-demo` work is now AIDA !50 and !51; CVC consumer-list docs are CVC !13; local dead branches and stashes are cleaned up on Yazan's machine. |
+| Fri 2026-09-25 | Walkthroughs and verification | The site is already live; use it during Uqba's AIDA walkthrough and the Sandro/Uqba CVC and CI/CD session where they do a release while watched. |
 | Mon 2026-09-28 | Last day | Q&A, gap fixes, goodbye. Afterward contact Yazan through the WhatsApp group. |
 
 ## Walkthrough goals

@@ -77,6 +77,12 @@ const paletteStyle = cva("fixed inset-0 z-[90] grid place-items-start bg-ink/25 
 const resolvedPaletteStyle = computed<string>(() => paletteStyle({ open: isOpen.value }));
 const normalizedSearchTerm = computed<string>(() => searchTerm.value.trim().toLowerCase());
 const availableSections = computed<SearchSection[]>(() => (sections.value || []));
+const pageTitleByPath = computed<Record<string, string>>(() => Object.fromEntries(availableSections.value.filter((section) => !section.id.includes("#")).map((section) => [section.id, section.title])));
+const shouldShowThemeCommand = computed<boolean>(() => {
+  const query = normalizedSearchTerm.value;
+
+  return !query || ["dark", "light", "theme", "mode"].some((keyword) => keyword.includes(query) || query.includes(keyword));
+});
 const searchResults = computed<SearchResult[]>(() => {
   const query = normalizedSearchTerm.value;
   const fallbackSections = availableSections.value.filter((section) => section.id.split("#").length === 1).slice(0, 7);
@@ -177,7 +183,8 @@ function createSearchResult(section: SearchSection, query: string): SearchResult
   const terms = getSearchTerms(query);
   const title = section.title || section.id;
   const path = section.id;
-  const group = path.split("#")[0]?.replace("/docs/", "") || "docs";
+  const pagePath = path.split("#")[0] || "/docs";
+  const group = pageTitleByPath.value[pagePath] || title;
   const exactScore = query && haystack.includes(query) ? 60 : 0;
   const termScore = terms.filter((term) => haystack.includes(term)).length * 18;
   const fuzzyScore = query && hasOrderedCharacters(haystack, query) ? 8 : 0;
@@ -277,14 +284,14 @@ watch(searchTerm, () => {
         <input id="command-search" ref="searchInputElement" v-model="searchTerm" class="w-full bg-transparent text-base outline-none placeholder:text-muted" placeholder="Search docs… Ctrl K or /" @keydown="handlePaletteKeydown" />
       </div>
       <div class="max-h-[60vh] overflow-y-auto p-2">
-        <button class="group grid w-full gap-2 rounded-2xl p-4 text-left transition hover:bg-violet-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500" type="button" @click="toggleTheme">
-          <span class="font-mono text-[0.64rem] uppercase tracking-[0.18em] text-violet-700">Theme</span>
+        <button v-if="shouldShowThemeCommand" class="group grid w-full gap-2 rounded-2xl p-4 text-left transition hover:bg-violet-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500" type="button" @click="toggleTheme">
+          <span class="font-mono text-[0.64rem] tracking-[0.12em] text-violet-700">Theme</span>
           <span class="text-base font-semibold tracking-[-0.01em] text-ink">Toggle dark mode</span>
           <span class="line-clamp-2 text-sm leading-6 text-muted">Current: {{ isDark ? "dark" : "light" }}</span>
         </button>
         <p v-if="normalizedSearchTerm.length === 0" class="px-4 pb-2 pt-3 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-ink/40">Suggested pages</p>
         <button v-for="(result, resultIndex) in searchResults" :key="result.id" class="group grid w-full gap-2 rounded-2xl p-4 text-left transition hover:bg-violet-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500" :class="resultIndex === activeResultIndex ? 'bg-violet-50' : ''" type="button" @mouseenter="activeResultIndex = resultIndex" @click="selectResult(result)">
-          <span class="font-mono text-[0.64rem] uppercase tracking-[0.18em] text-violet-700">{{ result.group }}</span>
+          <span class="font-mono text-[0.64rem] tracking-[0.12em] text-violet-700">{{ result.group }}</span>
           <span class="text-base font-semibold tracking-[-0.01em] text-ink">{{ result.title }}</span>
           <span class="line-clamp-2 text-sm leading-6 text-muted" v-html="result.snippet" />
         </button>

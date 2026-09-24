@@ -4,7 +4,7 @@ description: 'Plain-language definitions for the handover terms that come up acr
 order: 1
 section: 'reference'
 owner: 'Team'
-updated: '2026-09-23'
+updated: '2026-09-24'
 ---
 
 # Glossary
@@ -14,6 +14,7 @@ updated: '2026-09-23'
 | AIDA | AI-Driven Data Analyzer, Infineon's Veritas Post-Si plotting tool. |
 | CVC | `@psvcommon/common-components`, the shared PSV Vue component library. |
 | HICP | Infineon's OpenShift hosting environment used by the apps and playground namespace. |
+| Handover site | This Nuxt static site, live at `yazi-kamikazi-handover.icp.infineon.com` in playground namespace `play-yazi-kamikazi` on EU-AT-4 until around 2026-12-22. |
 | semantic-release | A tool that reads Conventional Commits, determines a version, creates release notes/tags, and can publish packages. |
 | prerelease | A version for an integration branch before stable release, such as `0.3.0-develop.6`. |
 | Helm | Kubernetes packaging tool used by pipelines to deploy OpenShift resources. |

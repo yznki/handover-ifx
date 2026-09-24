@@ -1,10 +1,10 @@
 ---
 title: 'CVC showcase'
-description: 'What the showcase branch contains, why it should be split, and how to avoid release confusion.'
+description: 'How the CVC showcase is generated, built, and kept separate from package release flow.'
 order: 3
 section: 'cvc'
 owner: 'Sandro'
-updated: '2026-09-23'
+updated: '2026-09-24'
 ---
 
 # CVC showcase

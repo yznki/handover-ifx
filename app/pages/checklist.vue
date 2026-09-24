@@ -33,18 +33,18 @@ interface ChecklistItem {
 }
 
 const checklistItems: ChecklistItem[] = [
-  { identifier: "split-showcase", owner: "Yazan", group: "Before I leave", title: "Split showcase/aida-demo", description: "Create one standalone-fixes merge request and one feat/onboarding-tour merge request, then delete showcase." },
+  { identifier: "review-aida-50", owner: "Uqba", group: "Before I leave", title: "Review & merge AIDA !50 (standalone fix)", description: "Standalone development-auth fix from the former showcase branch; lint, typecheck, build, and tests passed." },
+  { identifier: "review-aida-51", owner: "Uqba", group: "Before I leave", title: "Review & merge AIDA !51 (onboarding tour)", description: "Check the adaptation that uses develop's existing single-file upload API instead of the unfinished batch upload." },
   { identifier: "promote-aida", owner: "Yazan", group: "Before I leave", title: "Promote AIDA develop", description: "Promote develop 1.6.0-develop.1 to master." },
-  { identifier: "delete-dead-local", owner: "Yazan", group: "Before I leave", title: "Delete dead local branches and stashes", description: "Remove local-only throwaway branches and stale stashes after the site build." },
+  { identifier: "walkthroughs", owner: "Yazan", group: "Before I leave", title: "Run Fri 25 walkthrough sessions", description: "AIDA with Uqba, then CVC and CI/CD with Sandro and Uqba while they do a release." },
   { identifier: "assistant-workflow", owner: "Uqba", group: "AIDA", title: "Plan Workflow 04 Assistant", description: "Use aida-plan-workflow plus competitor research; the current POC is a directional draft." },
   { identifier: "release-cvc", owner: "Uqba + Sandro", group: "CVC", title: "Release CVC 0.3.0 stable", description: "Develop is 24 commits ahead of master; release stable before larger split discussions." },
-  { identifier: "fix-cvc-claude", owner: "Uqba + Sandro", group: "CVC", title: "Fix CVC CLAUDE.md consumer list", description: "It wrongly lists AIDA as a CVC consumer." },
+  { identifier: "merge-cvc-13", owner: "Uqba + Sandro", group: "CVC", title: "Merge CVC !13 (consumer list docs)", description: "Docs fix for CLAUDE.md and .github/copilot-instructions.md; targets develop and is not merged yet." },
   { identifier: "pitch-cvc-split", owner: "Uqba + Sandro", group: "CVC", title: "Pitch the CVC split to Kevin", description: "The Turborepo split is Yazan's idea only; present logic before treating it as approved." },
   { identifier: "valibridge-3677", owner: "Uqba + Sandro", group: "ValiBridge", title: "Remember VALIBRIDGE-3677", description: "The API branch bugfix/VALIBRIDGE-3677 is pushed but not merged into develop." },
   { identifier: "epic-4026", owner: "Uqba + Sandro", group: "ValiBridge", title: "Merge VALIBRIDGE-4026 epic", description: "Project phases epic is not merged to develop in client or API." },
   { identifier: "rotate-jira-token", owner: "Kevin", group: "Access & credentials", title: "Rotate aida-planning Jira token", description: "Secret name aida-planning-jira-token in namespace aida must stop depending on Yazan's personal Jira PAT." },
-  { identifier: "playground-expiry", owner: "Uqba (Kevin backup)", group: "Access & credentials", title: "Track playground namespace expiry", description: "play-yazi-kamikazi expires around 2026-12-22." },
-  { identifier: "walkthroughs", owner: "Yazan", group: "After I leave", title: "Run Fri 25 walkthrough sessions", description: "AIDA with Uqba, then CVC and CI/CD with Sandro and Uqba while they do a release." }
+  { identifier: "playground-expiry", owner: "Uqba · Kevin", group: "Access & credentials", title: "Track playground namespace expiry", description: "play-yazi-kamikazi expires around 2026-12-22." }
 ];
 
 const storageKey = "handover-checklist-state";
@@ -129,7 +129,7 @@ onMounted(() => {
           <span class="block text-base font-semibold tracking-[-0.01em] text-ink">{{ item.title }}</span>
           <span class="mt-1 block text-sm leading-6 text-muted">{{ item.description }}</span>
         </span>
-        <span class="pt-0.5 text-left font-mono text-[0.68rem] uppercase tracking-[0.14em] text-muted sm:text-right">{{ item.owner }}</span>
+        <span class="whitespace-nowrap pt-0.5 text-left font-mono text-[0.68rem] uppercase tracking-[0.14em] text-muted sm:text-right">{{ item.owner }}</span>
       </button>
     </section>
   </main>

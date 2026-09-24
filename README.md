@@ -21,6 +21,18 @@ pnpm generate
 pnpm review
 ```
 
+## Live site and redeploy
+
+The site is live at <https://yazi-kamikazi-handover.icp.infineon.com>.
+
+It runs in the HICP playground namespace `play-yazi-kamikazi` on EU-AT-4 and expires around 2026-12-22. To redeploy from this repository, run:
+
+```powershell
+pwsh scripts/deploy.ps1
+```
+
+The script runs local `pnpm generate`, builds an OpenShift binary Docker image named `handover-ifx`, and pins the Deployment to the built image digest.
+
 ## Deployment files
 
 The repository includes a multi-stage `Dockerfile` that builds with Node 22 and serves `.output/public` through `nginxinc/nginx-unprivileged` on port 8080. Helm files live in `helm/` and target namespace `play-yazi-kamikazi` with host `yazi-kamikazi-handover.icp.infineon.com` as a configurable value.

@@ -1,10 +1,10 @@
 ---
 title: 'Deploy to HICP by hand'
-description: 'A manual deployment reference for understanding the same OpenShift and Helm shape used by CI/CD.'
+description: 'A deployment reference for the live handover site, HICP playground hosting, and related OpenShift patterns.'
 order: 5
 section: 'aida'
 owner: 'Uqba'
-updated: '2026-09-23'
+updated: '2026-09-24'
 ---
 
 # Deploy to HICP by hand
@@ -13,13 +13,26 @@ updated: '2026-09-23'
 This is a runbook for understanding the deployment shape. It is not a command to paste blindly into a terminal. Use the normal CI/CD pipeline when possible. If a manual deployment is needed, use the same structure as the pipelines and never write secret values into this repository, a ticket, or a chat.
 ::
 
+## Handover site current deployment
+
+The handover site is deployed at <https://yazi-kamikazi-handover.icp.infineon.com>.
+
+| Fact | Value |
+| --- | --- |
+| Namespace | `play-yazi-kamikazi` |
+| HICP cluster | EU-AT-4 playground |
+| Expiry | around 2026-12-22 |
+| Redeploy command | `pwsh scripts/deploy.ps1` |
+
+The redeploy script runs local `pnpm generate`, builds an OpenShift binary Docker image named `handover-ifx`, and pins the Deployment to the built image digest. Do not edit the script during normal content updates; rerun it only when a refreshed static build should go live.
+
 ## Namespaces and clusters
 
 | Application | Namespace | Cluster / host facts from source files |
 | --- | --- | --- |
 | AIDA | `aida` | AIDA values use `aida.icp.infineon.com` and `aida-demo.icp.infineon.com`; CI comments reference EU-DE-4 API URL by variable. |
 | aida-planning hub | `aida` | The planning CI service account was confirmed scoped to `aida`; route host is `aida-planning.icp.infineon.com`. |
-| handover site | `play-yazi-kamikazi` | Helm values in this repository set `yazi-kamikazi-handover.icp.infineon.com` and target the playground namespace. |
+| handover site | `play-yazi-kamikazi` | Live at `yazi-kamikazi-handover.icp.infineon.com` on EU-AT-4 playground; expires around 2026-12-22. |
 | CVC showcase | `lost` | CVC README and pipeline deploy the showcase there when enabled. |
 
 ## Service account pattern
