@@ -187,6 +187,7 @@ interface PermissionedDeviceMotionEventConstructor {
 
 const maximumLetters = 60;
 const initialNote = "go on, throw them.";
+const soundStorageKey = "handover-sound-enabled";
 const letterButtonStyle = cva("absolute select-none touch-none cursor-grab font-display text-[112px] font-black leading-[0.78] tracking-[-0.055em] outline-none transition-[filter] hover:drop-shadow-[0_0_0.7rem_rgba(109,59,255,0.18)] active:cursor-grabbing focus-visible:drop-shadow-[0_0_0.7rem_rgba(109,59,255,0.55)] md:text-[220px]", {
   variants: {
     black: {
@@ -337,8 +338,16 @@ function scheduleIdleHint(): void {
 function playImpactSound(velocity: number): void {
   if (!soundEnabled.value || reducedMotion.value) return;
 
-  const resolvedAudioContext = audioContext.value || new AudioContext();
+  const browserWindow = window as Window & typeof globalThis & { webkitAudioContext?: typeof AudioContext };
+  const AudioContextConstructor = window.AudioContext || browserWindow.webkitAudioContext;
+
+  if (!AudioContextConstructor) return;
+
+  const resolvedAudioContext = audioContext.value || new AudioContextConstructor();
   audioContext.value = resolvedAudioContext;
+
+  if (resolvedAudioContext.state === "suspended") return;
+
   const oscillator = resolvedAudioContext.createOscillator();
   const gain = resolvedAudioContext.createGain();
   oscillator.frequency.value = 130 + Math.min(velocity, 32) * 9;
@@ -826,8 +835,21 @@ function dodgeEnterButton(): void {
 /**
  * Toggles optional impact sound.
  */
-function toggleSound(): void {
+async function toggleSound(): Promise<void> {
   soundEnabled.value = !soundEnabled.value;
+  localStorage.setItem(soundStorageKey, soundEnabled.value ? "true" : "false");
+
+  if (!soundEnabled.value) return;
+
+  const browserWindow = window as Window & typeof globalThis & { webkitAudioContext?: typeof AudioContext };
+  const AudioContextConstructor = window.AudioContext || browserWindow.webkitAudioContext;
+
+  if (!AudioContextConstructor) return;
+
+  const resolvedAudioContext = audioContext.value || new AudioContextConstructor();
+  audioContext.value = resolvedAudioContext;
+  await resolvedAudioContext.resume();
+  playImpactSound(14);
 }
 
 /**
@@ -884,6 +906,7 @@ function handleResize(): void {
 
 onMounted(async () => {
   await nextTick();
+  soundEnabled.value = localStorage.getItem(soundStorageKey) === "true";
   resetLetters();
   animationFrameIdentifier.value = window.requestAnimationFrame(animateLetters);
   window.addEventListener("resize", handleResize);
@@ -927,7 +950,7 @@ onBeforeUnmount(() => {
       thrown: {{ thrownCount }}
     </p>
 
-    <div class="absolute bottom-28 right-5 z-20 flex flex-col items-end gap-2 sm:bottom-10">
+    <div class="absolute bottom-28 right-5 z-30 flex flex-col items-end gap-2 sm:bottom-10">
       <button class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink/35 transition hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500" type="button" @click="toggleSound">
         sound: {{ soundEnabled ? "on" : "off" }}
       </button>
@@ -985,7 +1008,6 @@ onBeforeUnmount(() => {
       </button>
       <p class="text-center font-mono text-[11px] uppercase tracking-[0.28em] text-ink/45">
         Yazan · last day 28.09.2026
-        <NuxtLink class="ml-3 underline decoration-ink/20 underline-offset-4 hover:text-violet-600" to="/docs">skip →</NuxtLink>
       </p>
     </div>
   </main>

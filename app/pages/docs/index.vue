@@ -38,18 +38,18 @@ function closeSidebar(): void {
 </script>
 
 <template>
-  <main class="mx-auto grid max-w-[1760px] gap-8 px-4 pb-20 pt-24 sm:px-6 lg:grid-cols-[18rem_minmax(0,1fr)]">
+  <main class="mx-auto grid max-w-[1680px] gap-5 px-3 pb-16 pt-20 sm:px-4 lg:grid-cols-[17rem_minmax(0,1fr)]">
     <DocsSidebar :pages="navigationDocuments" current-path="/docs" :open="isSidebarOpen" @close="closeSidebar" />
 
     <section class="mx-auto w-full max-w-[980px] min-w-0">
-      <button class="mb-5 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-surface/55 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted shadow-sm lg:hidden" type="button" @click="openSidebar">
+      <button class="mb-4 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-surface/55 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted shadow-sm lg:hidden" type="button" @click="openSidebar">
         Browse docs
       </button>
 
-      <header class="mb-10 border-b border-ink/10 pb-8">
+      <header class="mb-8 border-b border-ink/10 pb-6">
         <p class="mb-4 font-mono text-[0.68rem] uppercase tracking-[0.2em] text-violet-700">Explore mode</p>
         <h1 class="max-w-[14ch] text-[clamp(2.2rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.025em] text-ink">The grown-up handover lives here.</h1>
-        <p class="mt-5 max-w-[62ch] text-lg leading-8 text-muted">Start with the operating model, then jump into the AIDA, CVC, ValiBridge, access, and runbook pages as needed.</p>
+        <p class="mt-4 max-w-[62ch] text-lg leading-8 text-muted">Start with the operating model, then jump into the AIDA, CVC, ValiBridge, access, and runbook pages as needed.</p>
       </header>
 
       <NuxtLink to="/docs/how-my-mind-works" class="group mb-5 grid rounded-3xl border border-violet-300 bg-violet-50/80 p-6 transition hover:-translate-y-0.5 hover:bg-violet-50 md:grid-cols-[1fr_auto] md:items-end">

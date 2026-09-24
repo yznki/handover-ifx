@@ -8,8 +8,33 @@ const pages = [
   { name: "explore-cvc", path: "/docs/cvc-now-and-next" },
   { name: "checklist", path: "/checklist" }
 ];
+const auditPages = [
+  { name: "home", path: "/" },
+  { name: "docs-index", path: "/docs" },
+  { name: "aida-architecture", path: "/docs/aida-architecture" },
+  { name: "aida-planning", path: "/docs/aida-planning" },
+  { name: "aida-vision-v1", path: "/docs/aida-vision-v1" },
+  { name: "aida-workflows-status", path: "/docs/aida-workflows-status" },
+  { name: "cicd-aida", path: "/docs/cicd-aida" },
+  { name: "cicd-cvc", path: "/docs/cicd-cvc" },
+  { name: "cicd-planning", path: "/docs/cicd-planning" },
+  { name: "cvc-consumers", path: "/docs/cvc-consumers" },
+  { name: "cvc-local-testing", path: "/docs/cvc-local-testing" },
+  { name: "cvc-now-and-next", path: "/docs/cvc-now-and-next" },
+  { name: "cvc-showcase", path: "/docs/cvc-showcase" },
+  { name: "deploy-hicp-by-hand", path: "/docs/deploy-hicp-by-hand" },
+  { name: "glossary", path: "/docs/glossary" },
+  { name: "handover-week-timeline", path: "/docs/handover-week-timeline" },
+  { name: "how-my-mind-works", path: "/docs/how-my-mind-works" },
+  { name: "people-and-access", path: "/docs/people-and-access" },
+  { name: "semantic-release-fails", path: "/docs/semantic-release-fails" },
+  { name: "unfinished-business", path: "/docs/unfinished-business" },
+  { name: "valibridge", path: "/docs/valibridge" },
+  { name: "checklist", path: "/checklist" }
+];
 const viewports = [
   { name: "desktop", width: 1440, height: 900 },
+  { name: "tablet", width: 1024, height: 820 },
   { name: "mobile", width: 390, height: 844 }
 ];
 
@@ -94,6 +119,12 @@ test("enhanced home physics delight works", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("http://127.0.0.1:4173/", { waitUntil: "networkidle" });
   await expect(page.locator("[data-physics-bye]")).toBeVisible();
+  await expect(page.getByRole("link", { name: "skip →" })).toHaveCount(0);
+  const soundToggle = page.getByRole("button", { name: /sound: off|sound: on/ });
+  await soundToggle.click();
+  await expect(soundToggle).toContainText("sound: on");
+  await page.reload({ waitUntil: "networkidle" });
+  await expect(page.getByRole("button", { name: /sound: on/ })).toBeVisible();
   await waitForSettledLocalRendering(page, 2_400);
   await page.screenshot({ path: `${reviewDirectory}\\home-desktop-more-initial.png`, fullPage: false });
 
@@ -219,6 +250,100 @@ test("dark mode renders without flash", async ({ page }) => {
   await page.screenshot({ path: `${reviewDirectory}\\dark-command-palette.png`, fullPage: false });
   await paletteThemeButton.click();
   await expect(page.locator("html")).not.toHaveClass(/dark/);
+
+  expect(consoleErrors).toEqual([]);
+});
+
+test("polish audit interactions work", async ({ page }) => {
+  test.setTimeout(180_000);
+  const consoleErrors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") consoleErrors.push(message.text());
+  });
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("http://127.0.0.1:4173/docs", { waitUntil: "networkidle" });
+  await expect(page.locator("[data-theme-toggle]").first()).toBeVisible();
+  await expect(page.locator("[data-theme-toggle]").first().locator("[data-theme-icon-sun] circle")).toHaveCount(1);
+  await expect(page.locator("[data-theme-toggle]").first().locator("[data-theme-icon-sun] path")).toHaveCount(1);
+  await expect(page.locator("[data-theme-toggle]").first().locator("[data-theme-icon-moon] path")).toHaveCount(1);
+
+  await page.getByRole("button", { name: /Search docs/ }).click();
+  await expect(page.locator("#command-search")).toBeFocused();
+  await page.locator("#command-search").fill("insecure-skip-tls-verify");
+  await expect(page.locator("mark").first()).toContainText("insecure-skip-tls-verify", { ignoreCase: true });
+  await page.keyboard.press("Enter");
+  await page.waitForURL("**/docs/**", { timeout: 5_000 });
+  await expect(page.getByText("insecure-skip-tls-verify").first()).toBeVisible();
+
+  await page.goto("http://127.0.0.1:4173/docs/aida-architecture", { waitUntil: "networkidle" });
+  await page.evaluate(() => window.scrollTo(0, 520));
+  await waitForSettledLocalRendering(page, 400);
+  const activeTocCount = await page.locator("[data-active-toc='true']").count();
+  expect(activeTocCount).toBeGreaterThanOrEqual(2);
+
+  await page.keyboard.press("Control+K");
+  await expect(page.locator("#command-search")).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(page.locator("#command-search")).not.toBeVisible();
+
+  await page.goto("http://127.0.0.1:4173/checklist", { waitUntil: "networkidle" });
+  await expect(page.getByRole("heading", { name: "Before I leave" })).toBeVisible();
+  await expect(page.getByText("Uqba + Sandro").first()).toBeVisible();
+  await expect(page.locator(".rounded-full", { hasText: "Uqba + Sandro" })).toHaveCount(0);
+
+  await page.goto("http://127.0.0.1:4173/", { waitUntil: "networkidle" });
+  await expect(page.getByRole("link", { name: "skip →" })).toHaveCount(0);
+  const soundToggle = page.getByRole("button", { name: /sound: off|sound: on/ });
+  await soundToggle.click();
+  await expect(soundToggle).toContainText(/sound: on|sound: off/);
+  await page.getByRole("button", { name: /dark: off|dark: on/ }).click();
+  await expect(page.locator("html")).toHaveClass(/dark/);
+
+  expect(consoleErrors).toEqual([]);
+});
+
+test("full light and dark visual audit", async ({ page }) => {
+  test.setTimeout(600_000);
+  const consoleErrors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") consoleErrors.push(message.text());
+  });
+
+  for (const theme of ["light", "dark"]) {
+    await page.addInitScript((nextTheme) => {
+      localStorage.setItem("handover-theme", nextTheme);
+    }, theme);
+
+    for (const viewport of viewports) {
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+
+      for (const targetPage of auditPages) {
+        await page.goto(`http://127.0.0.1:4173${targetPage.path}`, { waitUntil: "domcontentloaded" });
+        await expect(page.locator("html")).toHaveClass(theme === "dark" ? /dark/ : /^((?!dark).)*$/);
+        await page.waitForLoadState("networkidle");
+        await expect(page.locator("body")).toBeVisible();
+        await waitForSettledLocalRendering(page, targetPage.path === "/" ? 900 : 250);
+        await page.screenshot({
+          path: `${reviewDirectory}\\audit-${theme}-${viewport.name}-${targetPage.name}.png`,
+          fullPage: targetPage.path !== "/"
+        });
+      }
+    }
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("http://127.0.0.1:4173/docs/aida-architecture", { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "Browse docs" }).click();
+  await waitForSettledLocalRendering(page, 400);
+  await page.screenshot({ path: `${reviewDirectory}\\audit-mobile-sidebar-drawer.png`, fullPage: false });
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("http://127.0.0.1:4173/docs", { waitUntil: "networkidle" });
+  await page.keyboard.press("Control+K");
+  await page.locator("#command-search").fill("Jira token");
+  await waitForSettledLocalRendering(page, 300);
+  await page.screenshot({ path: `${reviewDirectory}\\audit-command-palette-search.png`, fullPage: false });
 
   expect(consoleErrors).toEqual([]);
 });

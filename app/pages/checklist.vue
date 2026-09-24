@@ -33,18 +33,18 @@ interface ChecklistItem {
 }
 
 const checklistItems: ChecklistItem[] = [
-  { identifier: "split-showcase", owner: "Yazan", group: "Release cleanup", title: "Split showcase/aida-demo", description: "Create one standalone-fixes merge request and one feat/onboarding-tour merge request, then delete showcase." },
-  { identifier: "promote-aida", owner: "Yazan", group: "Release cleanup", title: "Promote AIDA develop", description: "Promote develop 1.6.0-develop.1 to master." },
-  { identifier: "release-cvc", owner: "Sandro", group: "CVC", title: "Release CVC 0.3.0 stable", description: "Develop is 24 commits ahead of master; release stable before larger split discussions." },
-  { identifier: "rotate-jira-token", owner: "Kevin", group: "Access", title: "Rotate aida-planning Jira token", description: "Secret name aida-planning-jira-token in namespace aida must stop depending on Yazan's personal Jira PAT." },
-  { identifier: "valibridge-3677", owner: "Uqba", group: "ValiBridge", title: "Remember VALIBRIDGE-3677", description: "The API branch bugfix/VALIBRIDGE-3677 is pushed but not merged into develop." },
-  { identifier: "epic-4026", owner: "Sandro", group: "ValiBridge", title: "Merge VALIBRIDGE-4026 epic", description: "Project phases epic is not merged to develop in client or API." },
-  { identifier: "fix-cvc-claude", owner: "Sandro", group: "CVC", title: "Fix CVC CLAUDE.md consumer list", description: "It wrongly lists AIDA as a CVC consumer." },
-  { identifier: "delete-dead-local", owner: "Yazan", group: "Cleanup", title: "Delete dead local branches and stashes", description: "Remove local-only throwaway branches and stale stashes after the site build." },
+  { identifier: "split-showcase", owner: "Yazan", group: "Before I leave", title: "Split showcase/aida-demo", description: "Create one standalone-fixes merge request and one feat/onboarding-tour merge request, then delete showcase." },
+  { identifier: "promote-aida", owner: "Yazan", group: "Before I leave", title: "Promote AIDA develop", description: "Promote develop 1.6.0-develop.1 to master." },
+  { identifier: "delete-dead-local", owner: "Yazan", group: "Before I leave", title: "Delete dead local branches and stashes", description: "Remove local-only throwaway branches and stale stashes after the site build." },
   { identifier: "assistant-workflow", owner: "Uqba", group: "AIDA", title: "Plan Workflow 04 Assistant", description: "Use aida-plan-workflow plus competitor research; the current POC is a directional draft." },
-  { identifier: "pitch-cvc-split", owner: "Sandro + Uqba", group: "CVC", title: "Pitch the CVC split to Kevin", description: "The Turborepo split is Yazan's idea only; present logic before treating it as approved." },
-  { identifier: "playground-expiry", owner: "Uqba (Kevin backup)", group: "Access", title: "Track playground namespace expiry", description: "play-yazi-kamikazi expires around 2026-12-22." },
-  { identifier: "walkthroughs", owner: "Yazan", group: "Handover week", title: "Run Fri 25 walkthrough sessions", description: "AIDA with Uqba, then CVC and CI/CD with Sandro and Uqba while they do a release." }
+  { identifier: "release-cvc", owner: "Uqba + Sandro", group: "CVC", title: "Release CVC 0.3.0 stable", description: "Develop is 24 commits ahead of master; release stable before larger split discussions." },
+  { identifier: "fix-cvc-claude", owner: "Uqba + Sandro", group: "CVC", title: "Fix CVC CLAUDE.md consumer list", description: "It wrongly lists AIDA as a CVC consumer." },
+  { identifier: "pitch-cvc-split", owner: "Uqba + Sandro", group: "CVC", title: "Pitch the CVC split to Kevin", description: "The Turborepo split is Yazan's idea only; present logic before treating it as approved." },
+  { identifier: "valibridge-3677", owner: "Uqba + Sandro", group: "ValiBridge", title: "Remember VALIBRIDGE-3677", description: "The API branch bugfix/VALIBRIDGE-3677 is pushed but not merged into develop." },
+  { identifier: "epic-4026", owner: "Uqba + Sandro", group: "ValiBridge", title: "Merge VALIBRIDGE-4026 epic", description: "Project phases epic is not merged to develop in client or API." },
+  { identifier: "rotate-jira-token", owner: "Kevin", group: "Access & credentials", title: "Rotate aida-planning Jira token", description: "Secret name aida-planning-jira-token in namespace aida must stop depending on Yazan's personal Jira PAT." },
+  { identifier: "playground-expiry", owner: "Uqba (Kevin backup)", group: "Access & credentials", title: "Track playground namespace expiry", description: "play-yazi-kamikazi expires around 2026-12-22." },
+  { identifier: "walkthroughs", owner: "Yazan", group: "After I leave", title: "Run Fri 25 walkthrough sessions", description: "AIDA with Uqba, then CVC and CI/CD with Sandro and Uqba while they do a release." }
 ];
 
 const storageKey = "handover-checklist-state";
@@ -58,7 +58,7 @@ const checkboxStyle = cva("grid h-5 w-5 shrink-0 place-items-center rounded-md b
     }
   }
 });
-const rowStyle = cva("grid gap-4 border-b border-ink/10 px-4 py-4 text-left transition hover:bg-surface/45 sm:grid-cols-[auto_1fr_auto]", {
+const rowStyle = cva("grid w-full gap-4 border-b border-ink/10 px-4 py-4 text-left transition hover:bg-surface/45 sm:grid-cols-[auto_minmax(0,1fr)_9.5rem] sm:items-start", {
   variants: {
     checked: {
       true: "bg-violet-50/45",
@@ -129,7 +129,7 @@ onMounted(() => {
           <span class="block text-base font-semibold tracking-[-0.01em] text-ink">{{ item.title }}</span>
           <span class="mt-1 block text-sm leading-6 text-muted">{{ item.description }}</span>
         </span>
-        <span class="w-fit rounded-full border border-ink/10 bg-paper px-3 py-1 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-ink/55">{{ item.owner }}</span>
+        <span class="pt-0.5 text-left font-mono text-[0.68rem] uppercase tracking-[0.14em] text-muted sm:text-right">{{ item.owner }}</span>
       </button>
     </section>
   </main>

@@ -86,6 +86,8 @@ const tocLinkStyle = cva("relative rounded-lg py-1.5 text-sm leading-5 text-mute
   }
 });
 const activeIdentifier = ref<string>("");
+const activeIdentifiers = ref<string[]>([]);
+const rangeIndicatorStyle = ref<{ top: string; height: string }>({ top: "0px", height: "0px" });
 const flattenedLinks = computed<TableOfContentsLink[]>(() => properties.links.flatMap((link) => [link, ...(link.children || [])]).filter((link) => Boolean(link.id)));
 const metaItems = computed<PageMetaItem[]>(() => [
   { label: "Reading", value: properties.readingTime },
@@ -98,8 +100,57 @@ const metaItems = computed<PageMetaItem[]>(() => [
  */
 function updateActiveHeading(): void {
   const headings = flattenedLinks.value.map((link) => document.getElementById(link.id)).filter((element): element is HTMLElement => Boolean(element));
-  const activeHeading = [...headings].reverse().find((heading) => heading.getBoundingClientRect().top <= 120);
-  activeIdentifier.value = activeHeading?.id || flattenedLinks.value[0]?.id || "";
+  const visibleHeadingIdentifiers = headings.filter((heading, headingIndex) => {
+    const currentBounds = heading.getBoundingClientRect();
+    const nextHeading = headings[headingIndex + 1];
+    const nextBounds = nextHeading?.getBoundingClientRect();
+    const sectionTop = currentBounds.top;
+    const sectionBottom = nextBounds?.top || document.documentElement.scrollHeight - window.scrollY;
+
+    return sectionBottom > 96 && sectionTop < window.innerHeight - 80;
+  }).map((heading) => heading.id);
+  const fallbackIdentifier = [...headings].reverse().find((heading) => heading.getBoundingClientRect().top <= window.innerHeight - 80)?.id || flattenedLinks.value[0]?.id || "";
+  activeIdentifiers.value = visibleHeadingIdentifiers.length > 0 ? visibleHeadingIdentifiers : [fallbackIdentifier].filter(Boolean);
+  activeIdentifier.value = activeIdentifiers.value[0] || "";
+  updateRangeIndicator();
+}
+
+/**
+ * Updates the visible range indicator.
+ */
+function updateRangeIndicator(): void {
+  const tocElements = [...document.querySelectorAll("[data-toc-link]")].filter((element): element is HTMLElement => element instanceof HTMLElement);
+  const activeElements = activeIdentifiers.value.map((identifier) => tocElements.find((element) => element.dataset.tocLink === identifier)).filter((element): element is HTMLElement => Boolean(element));
+  const navigationElement = document.querySelector("[data-toc-navigation]");
+  const firstElement = activeElements[0];
+  const lastElement = activeElements[activeElements.length - 1];
+
+  if (!navigationElement || !firstElement || !lastElement) {
+    rangeIndicatorStyle.value = { top: "0px", height: "0px" };
+
+    return;
+  }
+
+  const navigationBounds = navigationElement.getBoundingClientRect();
+  const firstBounds = firstElement.getBoundingClientRect();
+  const lastBounds = lastElement.getBoundingClientRect();
+  rangeIndicatorStyle.value = {
+    top: `${firstBounds.top - navigationBounds.top + 6}px`,
+    height: `${lastBounds.bottom - firstBounds.top - 12}px`
+  };
+}
+
+/**
+ * Smoothly scrolls to a heading.
+ * @param headingIdentifier - Target heading identifier.
+ */
+function scrollToHeading(headingIdentifier: string): void {
+  const headingElement = document.getElementById(headingIdentifier);
+
+  if (!headingElement) return;
+
+  headingElement.scrollIntoView({ behavior: "smooth", block: "start" });
+  history.replaceState(null, "", `#${headingIdentifier}`);
 }
 
 onMounted(() => {
@@ -117,15 +168,18 @@ onBeforeUnmount(() => {
     <div class="sticky top-20 max-h-[calc(100svh-5rem)] overflow-y-auto border-l border-ink/10 pl-6">
       <section v-if="flattenedLinks.length > 0">
         <p class="mb-3 font-mono text-[0.68rem] uppercase tracking-[0.22em] text-ink/45">On this page</p>
-        <nav class="grid gap-1">
+        <nav class="relative grid gap-1" data-toc-navigation>
+          <span class="absolute left-0 w-0.5 rounded-full bg-violet-500 transition-all" :style="rangeIndicatorStyle" />
           <a
             v-for="link in flattenedLinks"
             :key="link.id"
             :href="`#${link.id}`"
+            :data-toc-link="link.id"
+            :data-active-toc="activeIdentifiers.includes(link.id) ? 'true' : 'false'"
             class="relative rounded-lg py-1.5 text-sm leading-5 text-muted transition hover:text-ink"
-            :class="tocLinkStyle({ depth: link.depth === 3 ? 'three' : 'two', active: activeIdentifier === link.id })"
+            :class="tocLinkStyle({ depth: link.depth === 3 ? 'three' : 'two', active: activeIdentifiers.includes(link.id) })"
+            @click.prevent="scrollToHeading(link.id)"
           >
-            <span v-if="activeIdentifier === link.id" class="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-violet-500" />
             {{ link.text }}
           </a>
         </nav>

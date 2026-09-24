@@ -107,28 +107,28 @@ function closeSidebar(): void {
 </script>
 
 <template>
-  <main class="mx-auto grid max-w-[1760px] gap-8 px-4 pb-20 pt-24 sm:px-6 lg:grid-cols-[18rem_minmax(0,1fr)] xl:grid-cols-[18rem_minmax(0,760px)_17rem]">
+  <main class="mx-auto grid max-w-[1680px] gap-5 px-3 pb-16 pt-20 sm:px-4 lg:grid-cols-[17rem_minmax(0,1fr)] xl:grid-cols-[17rem_minmax(0,820px)_16rem]">
     <DocsSidebar :pages="navigationDocuments" :current-path="path" :open="isSidebarOpen" @close="closeSidebar" />
 
-    <section class="mx-auto w-full max-w-[72ch] min-w-0 xl:max-w-none">
-      <button class="mb-5 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-surface/55 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted shadow-sm lg:hidden" type="button" @click="openSidebar">
+    <section class="mx-auto w-full max-w-[76ch] min-w-0 xl:max-w-none">
+      <button class="mb-4 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-surface/55 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted shadow-sm lg:hidden" type="button" @click="openSidebar">
         Browse docs
       </button>
 
       <article v-if="typedPage" class="min-w-0">
-        <nav class="mb-4 flex items-center gap-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-ink/45" aria-label="Breadcrumb">
+        <nav class="mb-3 flex items-center gap-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-ink/45" aria-label="Breadcrumb">
           <NuxtLink class="transition hover:text-violet-700" to="/docs">Explore</NuxtLink>
           <span>/</span>
           <span :class="sectionDotStyle({ section: currentSection.identifier })" />
           <span>{{ currentSection.label }}</span>
         </nav>
 
-        <header class="mb-10 border-b border-ink/10 pb-8">
+        <header class="mb-8 border-b border-ink/10 pb-6">
           <h1 class="max-w-[12ch] text-[clamp(2rem,4vw,2.75rem)] font-semibold leading-[1.02] tracking-[-0.02em] text-ink">{{ typedPage.title }}</h1>
           <p v-if="pageDescription" class="mt-4 max-w-[68ch] text-lg leading-8 text-muted">{{ pageDescription }}</p>
         </header>
 
-        <div class="content-prose max-w-[72ch]">
+        <div class="content-prose max-w-[76ch]">
           <ContentRenderer :value="typedPage" />
         </div>
 

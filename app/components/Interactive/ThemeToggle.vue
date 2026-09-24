@@ -39,14 +39,20 @@ function handleToggleTheme(): void {
   <button
     :class="buttonStyle({ variant: properties.variant })"
     type="button"
+    data-theme-toggle
     :aria-pressed="isDark"
     title="Toggle dark mode"
     @click="handleToggleTheme"
   >
     <span v-if="properties.variant === 'text'">dark: {{ isDark ? "on" : "off" }}</span>
-    <span v-else class="relative grid h-4 w-4 place-items-center" aria-hidden="true">
-      <span class="absolute h-4 w-4 rounded-full border border-current transition duration-300 motion-reduce:transition-none" :class="isDark ? 'scale-75 rotate-180 bg-current' : 'scale-100 rotate-0 bg-transparent'" />
-      <span class="absolute h-2 w-2 rounded-full bg-paper transition duration-300 motion-reduce:transition-none" :class="isDark ? 'translate-x-1 -translate-y-1 opacity-100' : 'translate-x-0 translate-y-0 opacity-0'" />
+    <span v-else class="relative grid h-[18px] w-[18px] place-items-center overflow-hidden" aria-hidden="true">
+      <svg data-theme-icon-sun class="absolute h-[18px] w-[18px] transition duration-300 motion-reduce:transition-none" :class="isDark ? 'scale-50 rotate-90 opacity-0' : 'scale-100 rotate-0 opacity-100'" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="4.25" stroke="currentColor" stroke-width="2" />
+        <path d="M12 2.75V5M12 19v2.25M4.75 4.75l1.6 1.6M17.65 17.65l1.6 1.6M2.75 12H5M19 12h2.25M4.75 19.25l1.6-1.6M17.65 6.35l1.6-1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+      <svg data-theme-icon-moon class="absolute h-[18px] w-[18px] transition duration-300 motion-reduce:transition-none" :class="isDark ? 'scale-100 rotate-0 opacity-100' : 'scale-50 -rotate-90 opacity-0'" viewBox="0 0 24 24" fill="none">
+        <path d="M19.25 15.15A7.55 7.55 0 0 1 8.85 4.75 8.15 8.15 0 1 0 19.25 15.15Z" fill="currentColor" />
+      </svg>
     </span>
     <span class="sr-only">Toggle dark mode</span>
   </button>
