@@ -27,7 +27,9 @@ EXPOSE 8080
   oc start-build $BuildName --from-dir=$stage --follow -n $Namespace
   if ($LASTEXITCODE -ne 0) { throw 'oc start-build failed' }
 
-  oc rollout restart "deploy/$BuildName" -n $Namespace
+  # Pin by digest: rolling out ":latest" was observed to keep serving the previous image.
+  $digest = oc get istag "${BuildName}:latest" -n $Namespace -o jsonpath='{.image.metadata.name}'
+  oc set image "deploy/$BuildName" "$BuildName=image-registry.openshift-image-registry.svc:5000/$Namespace/$BuildName@$digest" -n $Namespace
   oc rollout status "deploy/$BuildName" -n $Namespace --timeout=180s
   if ($LASTEXITCODE -ne 0) { throw 'rollout failed' }
 }
