@@ -30,16 +30,6 @@ interface ThemeControls {
 const storageKey = "handover-theme";
 
 /**
- * Gets the system colour preference.
- * @returns Resolved system theme mode.
- */
-function getSystemTheme(): ThemeMode {
-  if (!import.meta.client) return "light";
-
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-}
-
-/**
  * Reads a persisted explicit theme preference.
  * @returns Stored theme mode or an empty string.
  */
@@ -67,7 +57,7 @@ function applyTheme(themeMode: ThemeMode): void {
  * @returns Theme state and actions.
  */
 export function useTheme(): ThemeControls {
-  const themeMode = useState<ThemeMode>("handover-theme-mode", () => getStoredTheme() || getSystemTheme());
+  const themeMode = useState<ThemeMode>("handover-theme-mode", () => getStoredTheme() || "light");
   const isDark = computed<boolean>(() => themeMode.value === "dark");
 
   /**
@@ -90,7 +80,7 @@ export function useTheme(): ThemeControls {
   }
 
   onMounted(() => {
-    const initialTheme = getStoredTheme() || getSystemTheme();
+    const initialTheme = getStoredTheme() || "light";
     themeMode.value = initialTheme;
     applyTheme(initialTheme);
   });

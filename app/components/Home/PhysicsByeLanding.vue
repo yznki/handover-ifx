@@ -204,6 +204,14 @@ const particleStyle = cva("absolute rounded-sm", {
     }
   }
 });
+const homeToggleStyle = cva("inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[0.7rem] uppercase tracking-[0.16em] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-500", {
+  variants: {
+    active: {
+      true: "border-violet-500/60 bg-violet-500/10 text-violet-700 dark:text-violet-300",
+      false: "border-ink/15 bg-paper/70 text-ink/60 hover:border-ink/40 hover:text-ink"
+    }
+  }
+});
 const enterButtonStyle = cva("rounded-full border-2 border-ink bg-paper px-7 py-4 font-mono text-xs font-bold uppercase tracking-[0.28em] shadow-[5px_5px_0_#151316] transition-transform duration-300 ease-out hover:bg-violet-600 hover:text-white focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-violet-500", {
   variants: {
     wiggling: {
@@ -336,7 +344,7 @@ function scheduleIdleHint(): void {
  * @param velocity - Impact velocity.
  */
 function playImpactSound(velocity: number): void {
-  if (!soundEnabled.value || reducedMotion.value) return;
+  if (!soundEnabled.value) return;
 
   const browserWindow = window as Window & typeof globalThis & { webkitAudioContext?: typeof AudioContext };
   const AudioContextConstructor = window.AudioContext || browserWindow.webkitAudioContext;
@@ -352,12 +360,12 @@ function playImpactSound(velocity: number): void {
   const gain = resolvedAudioContext.createGain();
   oscillator.frequency.value = 130 + Math.min(velocity, 32) * 9;
   oscillator.type = "triangle";
-  gain.gain.value = 0.025;
+  gain.gain.setValueAtTime(0.18, resolvedAudioContext.currentTime);
   oscillator.connect(gain);
   gain.connect(resolvedAudioContext.destination);
   oscillator.start();
-  gain.gain.exponentialRampToValueAtTime(0.0001, resolvedAudioContext.currentTime + 0.08);
-  oscillator.stop(resolvedAudioContext.currentTime + 0.09);
+  gain.gain.exponentialRampToValueAtTime(0.0001, resolvedAudioContext.currentTime + 0.12);
+  oscillator.stop(resolvedAudioContext.currentTime + 0.13);
 }
 
 /**
@@ -950,12 +958,24 @@ onBeforeUnmount(() => {
       thrown: {{ thrownCount }}
     </p>
 
-    <div class="absolute bottom-28 right-5 z-30 flex flex-col items-end gap-2 sm:bottom-10">
-      <button class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink/35 transition hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500" type="button" @click="toggleSound">
-        sound: {{ soundEnabled ? "on" : "off" }}
+    <div class="absolute right-4 top-4 z-30 flex items-center gap-2 sm:right-6 sm:top-6" @pointerdown.stop @dblclick.stop>
+      <button :class="homeToggleStyle({ active: soundEnabled })" type="button" data-sound-toggle :aria-pressed="soundEnabled" :title="soundEnabled ? 'Turn sound off' : 'Turn sound on'" @click="toggleSound">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" />
+          <path v-if="soundEnabled" d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.8 7.8 0 0 1 0 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          <path v-else d="M16 9.5l5 5M21 9.5l-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <span>sound {{ soundEnabled ? "on" : "off" }}</span>
       </button>
-      <button class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink/35 transition hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-500" type="button" :aria-pressed="isDark" title="Toggle dark mode" @click="handleToggleTheme">
-        dark: {{ isDark ? "on" : "off" }}
+      <button :class="homeToggleStyle({ active: isDark })" type="button" data-home-theme-toggle :aria-pressed="isDark" title="Toggle dark mode" @click="handleToggleTheme">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path v-if="isDark" d="M19.25 15.15A7.55 7.55 0 0 1 8.85 4.75 8.15 8.15 0 1 0 19.25 15.15Z" fill="currentColor" />
+          <template v-else>
+            <circle cx="12" cy="12" r="4.25" stroke="currentColor" stroke-width="2" />
+            <path d="M12 2.75V5M12 19v2.25M4.75 4.75l1.6 1.6M17.65 17.65l1.6 1.6M2.75 12H5M19 12h2.25M4.75 19.25l1.6-1.6M17.65 6.35l1.6-1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </template>
+        </svg>
+        <span>{{ isDark ? "dark" : "light" }}</span>
       </button>
     </div>
 

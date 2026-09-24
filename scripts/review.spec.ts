@@ -120,11 +120,11 @@ test("enhanced home physics delight works", async ({ page }) => {
   await page.goto("http://127.0.0.1:4173/", { waitUntil: "networkidle" });
   await expect(page.locator("[data-physics-bye]")).toBeVisible();
   await expect(page.getByRole("link", { name: "skip →" })).toHaveCount(0);
-  const soundToggle = page.getByRole("button", { name: /sound: off|sound: on/ });
+  const soundToggle = page.locator("[data-sound-toggle]");
   await soundToggle.click();
-  await expect(soundToggle).toContainText("sound: on");
+  await expect(soundToggle).toContainText("sound on");
   await page.reload({ waitUntil: "networkidle" });
-  await expect(page.getByRole("button", { name: /sound: on/ })).toBeVisible();
+  await expect(page.locator("[data-sound-toggle]")).toContainText("sound on");
   await waitForSettledLocalRendering(page, 2_400);
   await page.screenshot({ path: `${reviewDirectory}\\home-desktop-more-initial.png`, fullPage: false });
 
@@ -298,11 +298,25 @@ test("polish audit interactions work", async ({ page }) => {
 
   await page.goto("http://127.0.0.1:4173/", { waitUntil: "networkidle" });
   await expect(page.getByRole("link", { name: "skip →" })).toHaveCount(0);
-  const soundToggle = page.getByRole("button", { name: /sound: off|sound: on/ });
+  const soundToggle = page.locator("[data-sound-toggle]");
   await soundToggle.click();
-  await expect(soundToggle).toContainText(/sound: on|sound: off/);
-  await page.getByRole("button", { name: /dark: off|dark: on/ }).click();
+  await expect(soundToggle).toContainText(/sound on|sound off/);
+
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.evaluate(() => localStorage.removeItem("handover-theme"));
+  await page.reload({ waitUntil: "networkidle" });
+  await expect(page.locator("html")).not.toHaveClass(/dark/);
+  await page.locator("[data-home-theme-toggle]").click();
   await expect(page.locator("html")).toHaveClass(/dark/);
+  await page.reload({ waitUntil: "networkidle" });
+  await expect(page.locator("html")).toHaveClass(/dark/);
+  await page.goto("http://127.0.0.1:4173/docs", { waitUntil: "networkidle" });
+  await expect(page.locator("html")).toHaveClass(/dark/);
+  await page.locator("[data-theme-toggle]").first().click();
+  await expect(page.locator("html")).not.toHaveClass(/dark/);
+  await page.reload({ waitUntil: "networkidle" });
+  await expect(page.locator("html")).not.toHaveClass(/dark/);
+  await page.emulateMedia({ colorScheme: "light" });
 
   expect(consoleErrors).toEqual([]);
 });

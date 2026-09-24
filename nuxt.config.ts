@@ -45,7 +45,7 @@ export default defineNuxtConfig({
       ],
       script: [
         {
-          innerHTML: "(() => { try { const stored = localStorage.getItem('handover-theme'); const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches; const dark = stored ? stored === 'dark' : systemDark; document.documentElement.classList.toggle('dark', dark); document.documentElement.dataset.theme = dark ? 'dark' : 'light'; } catch (error) {} })();"
+          innerHTML: "(() => { try { const dark = localStorage.getItem('handover-theme') === 'dark'; document.documentElement.classList.toggle('dark', dark); document.documentElement.dataset.theme = dark ? 'dark' : 'light'; } catch (error) {} })();"
         }
       ]
     }
