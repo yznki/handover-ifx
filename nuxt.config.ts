@@ -28,7 +28,7 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
-      routes: ["/", "/checklist", "/docs/aida-architecture", "/docs/cicd-aida", "/docs/cvc-now-and-next"]
+      routes: ["/", "/checklist", "/labs", "/docs/aida-architecture", "/docs/cicd-aida", "/docs/cvc-now-and-next"]
     }
   },
   app: {

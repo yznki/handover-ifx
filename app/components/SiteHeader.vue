@@ -7,6 +7,7 @@ const isNavigationOpen = ref<boolean>(false);
 
 const navigationLinks = [
   { label: "Explore", to: "/docs" },
+  { label: "Labs", to: "/labs" },
   { label: "Checklist", to: "/checklist" }
 ];
 

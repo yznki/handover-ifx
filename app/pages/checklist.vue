@@ -44,7 +44,10 @@ const checklistItems: ChecklistItem[] = [
   { identifier: "valibridge-3677", owner: "Uqba + Sandro", group: "ValiBridge", title: "Remember VALIBRIDGE-3677", description: "The API branch bugfix/VALIBRIDGE-3677 is pushed but not merged into develop." },
   { identifier: "epic-4026", owner: "Uqba + Sandro", group: "ValiBridge", title: "Merge VALIBRIDGE-4026 epic", description: "Project phases epic is not merged to develop in client or API." },
   { identifier: "rotate-jira-token", owner: "Kevin", group: "Access & credentials", title: "Rotate aida-planning Jira token", description: "Secret name aida-planning-jira-token in namespace aida must stop depending on Yazan's personal Jira PAT." },
-  { identifier: "playground-expiry", owner: "Uqba · Kevin", group: "Access & credentials", title: "Track playground namespace expiry", description: "play-yazi-kamikazi expires around 2026-12-22." }
+  { identifier: "playground-expiry", owner: "Uqba · Kevin", group: "Access & credentials", title: "Track playground namespace expiry", description: "play-yazi-kamikazi expires around 2026-12-22." },
+  { identifier: "revoke-labs-tokens", owner: "Yazan", group: "PSV Labs", title: "Revoke the PSV Labs build tokens", description: "Before logging off on Monday, revoke the LiteLLM key and the Artifactory token created for the PSV Labs build weekend." },
+  { identifier: "triage-labs", owner: "Kevin", group: "PSV Labs", title: "Pick the PSV Labs apps worth promoting", description: "Open /labs, try the fifteen prototypes and choose the two or three to take to production before the playground expires around 2026-12-22." },
+  { identifier: "labs-namespace", owner: "Kevin", group: "PSV Labs", title: "Give promoted apps their own namespace", description: "The quota increase belongs to play-yazi-kamikazi. Promoted apps need a real namespace, a team LiteLLM key in place of labs-litellm, and MIAMI SSO." }
 ];
 
 const storageKey = "handover-checklist-state";

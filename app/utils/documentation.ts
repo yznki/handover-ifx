@@ -73,7 +73,7 @@ export const documentationSections: DocumentationSection[] = [
   { identifier: "aida", label: "AIDA", description: "Vision, workflows, architecture, deployment, planning hub, and current pipelines.", accentClass: "bg-blue-500" },
   { identifier: "cvc", label: "CVC", description: "Shared component library status, consumers, showcase, release flow, and local testing.", accentClass: "bg-emerald-500" },
   { identifier: "valibridge", label: "ValiBridge", description: "Short status notes because the team already knows the domain.", accentClass: "bg-amber-500" },
-  { identifier: "reference", label: "Reference", description: "Glossary and shared terms for the handover.", accentClass: "bg-slate-500" }
+  { identifier: "reference", label: "Reference", description: "Glossary, shared terms, and the PSV Labs prototypes.", accentClass: "bg-slate-500" }
 ];
 
 /**

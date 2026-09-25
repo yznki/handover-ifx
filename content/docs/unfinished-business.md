@@ -29,6 +29,9 @@ The planning Jira token is tied to Yazan's personal Jira PAT according to the de
 | Pitch CVC split | Sandro + Uqba | The split is Yazan's idea only. Package boundaries are for Sandro and Uqba to decide, then pitch Kevin with logic. |
 | Track playground namespace expiry | Uqba · Kevin | `play-yazi-kamikazi` expires around 2026-12-22. |
 | Friday walkthroughs | Yazan | Friday 25 walkthroughs: Uqba AIDA, then Sandro/Uqba CVC and CI/CD while they do a release. |
+| Revoke PSV Labs build tokens | Yazan | Revoke the LiteLLM key and Artifactory token created for the PSV Labs build weekend before logging off on Monday. The app secret `labs-litellm` in `play-yazi-kamikazi` then stops working, and every Labs app falls back to rule-based logic. |
+| Triage PSV Labs | Kevin | Try the fifteen prototypes on [/labs](/labs) and pick the ones worth promoting before the playground expires around 2026-12-22. |
+| Namespace for promoted Labs apps | Kevin | The quota increase belongs to `play-yazi-kamikazi`. A promoted app needs its own namespace, a team LiteLLM key, MIAMI SSO and its LiveAdapter implemented. |
 
 ::note
 The GitLab `showcase/aida-demo` branch has been deleted. Its unfinished ingestion and batch-upload work still lives on the dedicated branches and open merge request that already carried that work, including `epic/DCVSW-1131`, `feature/DCVSW-1137`, `feature/DCVSW-1146`, `epic/DCVSW-1133/1134`, and AIDA MR !49 for DCVSW-1133.

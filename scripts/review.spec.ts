@@ -6,7 +6,8 @@ const pages = [
   { name: "explore-index", path: "/docs" },
   { name: "explore-aida-architecture", path: "/docs/aida-architecture" },
   { name: "explore-cvc", path: "/docs/cvc-now-and-next" },
-  { name: "checklist", path: "/checklist" }
+  { name: "checklist", path: "/checklist" },
+  { name: "labs", path: "/labs" }
 ];
 const auditPages = [
   { name: "home", path: "/" },
@@ -30,6 +31,8 @@ const auditPages = [
   { name: "semantic-release-fails", path: "/docs/semantic-release-fails" },
   { name: "unfinished-business", path: "/docs/unfinished-business" },
   { name: "valibridge", path: "/docs/valibridge" },
+  { name: "psv-labs", path: "/docs/psv-labs" },
+  { name: "labs", path: "/labs" },
   { name: "checklist", path: "/checklist" }
 ];
 const viewports = [

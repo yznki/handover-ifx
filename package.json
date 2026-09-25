@@ -9,6 +9,7 @@
     "generate": "nuxt generate",
     "preview": "npx serve .output/public -l 4173",
     "typecheck": "nuxt typecheck",
+    "labs:sync": "node scripts/sync-labs.mjs",
     "capture:sources": "playwright test scripts/capture-sources.spec.ts",
     "review": "playwright test scripts/review.spec.ts"
   },
