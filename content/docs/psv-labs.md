@@ -46,8 +46,9 @@ All data is seeded and deterministic. No app calls Jira, GitLab, ValiBridge or a
 | Thing | Location |
 | --- | --- |
 | Repositories | GitLab group `ifx/des/dos-vv-psp/sw/labs`, private, inherited from `sw`. |
+| Overview, redeploy tooling and build brief | [`labs/psv-labs`](https://gitlab.intra.infineon.com/ifx/des/dos-vv-psp/sw/labs/psv-labs): how to redeploy an app, swap in a team LiteLLM key, and promote. |
 | Hosting | Namespace `play-yazi-kamikazi` on EU-AT-4, one Deployment, Service and Route per app. |
-| AI credentials | Secret `labs-litellm` in the same namespace. It stops working when the build tokens are revoked. |
+| AI credentials | Secret `labs-litellm` in the same namespace. It stops working when the build tokens are revoked; the `labs/psv-labs` README has the one command to swap in a team key. |
 | Expiry | Everything expires with the playground around 2026-12-22. |
 
 ## How to decide what to keep
