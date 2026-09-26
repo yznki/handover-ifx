@@ -86,10 +86,15 @@ const passedGates = computed<Set<LabsGate>>(() => new Set(properties.labsApp.sta
 const cardNumber = computed<string>(() => String(properties.labsApp.number).padStart(2, "0"));
 const liveHost = computed<string>(() => properties.labsApp.status.url.replace("https://", ""));
 const showKnownGaps = computed<boolean>(() => properties.labsApp.status.phase !== "building" && properties.labsApp.status.knownGaps.length > 0);
+const previewSource = computed<string>(() => `/labs/${properties.labsApp.identifier}.webp`);
 </script>
 
 <template>
   <article :class="cardStyle({ live: labsApp.isLive })" :data-labs-app="labsApp.identifier">
+    <a v-if="labsApp.isLive" :href="labsApp.status.url" class="-mx-2 -mt-2 mb-6 block overflow-hidden rounded-2xl border border-ink/10 bg-ink/[0.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-500" target="_blank" rel="noopener" :aria-label="`Open ${labsApp.name}`">
+      <img :src="previewSource" :alt="`${labsApp.name} home screen`" class="aspect-[16/10] w-full object-cover object-top transition duration-500 group-hover:scale-[1.02]" width="960" height="600" loading="lazy" decoding="async">
+    </a>
+
     <div class="mb-6 flex items-center justify-between gap-3">
       <span class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink/40">{{ cardNumber }} · {{ labsApp.relation }}</span>
       <span :class="phaseBadgeStyle({ phase: labsApp.status.phase })" data-labs-phase>
@@ -103,6 +108,11 @@ const showKnownGaps = computed<boolean>(() => properties.labsApp.status.phase !=
     <p class="mt-3 text-sm leading-6 text-muted">{{ labsApp.problem }}</p>
 
     <p class="mt-5 font-mono text-[0.66rem] uppercase tracking-[0.16em] text-violet-700">{{ labsApp.audienceLabel }}</p>
+
+    <div class="mt-5 rounded-2xl border border-violet-300/50 bg-violet-50/40 px-4 py-3">
+      <p class="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-violet-700">Try this</p>
+      <p class="mt-1 text-sm leading-6 text-ink/85">{{ labsApp.demo }}</p>
+    </div>
 
     <div class="mt-6">
       <div class="mb-2 flex items-center justify-between font-mono text-[0.62rem] uppercase tracking-[0.16em] text-ink/40">

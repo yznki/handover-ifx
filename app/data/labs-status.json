@@ -1,139 +1,356 @@
 {
-  "syncedAt": "2026-09-25T10:41:31.971Z",
+  "syncedAt": "2026-09-26T12:45:58.993Z",
   "apps": [
     {
       "identifier": "benchbook",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [
-        "Build started"
+      "phase": "done",
+      "url": "https://benchbook.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
       ],
-      "updatedAt": "2026-09-25T09:22:22.9533805Z"
+      "knownGaps": [
+        "In-memory persistence: restarts reset to the seeded history",
+        "Browser Web Speech API may send audio to the vendor cloud; an on-prem recognizer is needed for production",
+        "No SSO yet (fictional demo persona)",
+        "Attachments are placeholders; grammar is English-only",
+        "Drift attribution is single-factor"
+      ],
+      "updatedAt": "2026-09-25T16:47:03.2579072Z"
     },
     {
       "identifier": "benchpulse",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [
-        "Build in progress"
+      "phase": "done",
+      "url": "https://benchpulse.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
       ],
-      "updatedAt": "2026-09-25T11:26:12.2579798+02:00"
+      "knownGaps": [
+        "Bookings and demand created in the app live in memory and reset on restart; no SSO - a browser session cookie decides who may cancel",
+        "Occupancy history and instrument use are simulated from bookings, not measured (TDEX run logs in production)",
+        "Solver books one bench per request; moves are costed by room distance, not floor-plan paths",
+        "Calibration due dates re-anchor with the lab week, so they are not stable across weeks",
+        "LiveAdapter endpoints (LOST, MCD, Instruments API, Exchange, TDEX) are designs, not verified contracts"
+      ],
+      "updatedAt": "2026-09-25T18:59:16.1047237+02:00"
     },
     {
       "identifier": "busfactor",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [],
-      "updatedAt": "2026-09-25T11:25:36.3709667+02:00"
+      "phase": "done",
+      "url": "https://busfactor.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
+      ],
+      "knownGaps": [
+        "Seeded data only (fictional personas, synthetic 36-month history); LiveAdapter is a documented stub",
+        "Journeys and checkpoints live in server memory; a restart resets them",
+        "Module boundaries must be declared per repository (busfactor.yml) in production",
+        "Heatmap scrolls horizontally on phones",
+        "No authentication yet (MIAMI SSO on the production path)",
+        "AI rate limit and caches are per pod",
+        "First-merged-MR KPI uses checkpoint tick time, not the GitLab merge date"
+      ],
+      "updatedAt": "2026-09-25T18:40:35.0552676+02:00"
     },
     {
       "identifier": "constellation",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [],
-      "updatedAt": "2026-09-25T11:25:44.8077232+02:00"
+      "phase": "done",
+      "url": "https://constellation.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
+      ],
+      "knownGaps": [
+        "LiveAdapter endpoints are expected shapes, not verified against ValiBridge/Jama",
+        "Accepted-risk waivers live in server memory (reset on restart) and have no SSO yet",
+        "Carry-over uses per-requirement observed extremes, not raw per-condition data from VBin",
+        "Bench incidents work per bench name; instrument-level incidents need instrument IDs on executions",
+        "Gate projection assumes open actions pass"
+      ],
+      "updatedAt": "2026-09-25T17:21:25.7434881+02:00"
     },
     {
       "identifier": "dejavu",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [
-        "Build in progress"
+      "phase": "done",
+      "url": "https://dejavu.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
       ],
-      "updatedAt": "2026-09-25T09:28:24.2738829Z"
+      "knownGaps": [
+        "Seeded fictional corpus; captured incidents live in memory and reset on restart",
+        "LiveAdapter (Jira/Confluence/ValiBridge) and Qdrant vector store are documented stubs",
+        "Retrieval benchmark (100% hit@1) is on a synthetic corpus, not real-world accuracy",
+        "Family clustering reruns on every capture (O(n^3), capped at 200 captures per instance)",
+        "Shared LiteLLM occasionally returns HTTP 429; answers then fall back to the labelled rule-based template",
+        "No authentication; rate limits are per client address"
+      ],
+      "updatedAt": "2026-09-25T16:15:15.3888564Z"
     },
     {
       "identifier": "driftwatch",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [],
-      "updatedAt": "2026-09-25T09:31:35.3424155Z"
+      "phase": "done",
+      "url": "https://driftwatch.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
+      ],
+      "knownGaps": [
+        "Seeded, in-memory data only; LiveAdapter documents GitLab/Artifactory/OpenShift integrations but throws NotImplementedError",
+        "Failure signatures are regex fingerprints of English tool output; unknown failures rely on the AI assistant or the rule-based checklist",
+        "Readiness checks model CI facts they are given (token scopes/expiry must be self-reported by the token in production)",
+        "Map layout tuned for ~5 packages / ~10 apps; phones use horizontal scroll or the list view",
+        "No SSO yet (MIAMI planned); AI rate limit is in-memory per replica"
+      ],
+      "updatedAt": "2026-09-25T16:08:28.6002563Z"
     },
     {
       "identifier": "headroom",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [],
-      "updatedAt": "2026-09-25T09:26:47.1807360Z"
+      "phase": "done",
+      "url": "https://headroom.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
+      ],
+      "knownGaps": [
+        "Seeded data only; LiveAdapter designed and stubbed, not connected",
+        "Limits are per requirement, not per condition",
+        "Drift compares consecutive silicon steps only",
+        "Guard bands for percentile-model cells are indicative (normal tolerance factors)",
+        "Tester uncertainty U defaults to 0.25 sigma until calibration records are linked",
+        "No authentication; analyses and AI briefings cached in memory"
+      ],
+      "updatedAt": "2026-09-25T15:29:47.1477600Z"
     },
     {
       "identifier": "hyperjump",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [
-        "Build just started"
+      "phase": "done",
+      "url": "https://hyperjump.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
       ],
-      "updatedAt": "2026-09-25T09:26:07.6583647Z"
+      "knownGaps": [
+        "Seed data only; LiveAdapter is a documented contract, not wired",
+        "Visitor profiles and KPIs in memory (restart resets); anonymous cookie until MIAMI SSO",
+        "No per-entity permissions yet",
+        "Ranking weights hand-tuned on seed data",
+        "German support is a curated synonym/phrase table, not full morphology"
+      ],
+      "updatedAt": "2026-09-25T16:37:18.8357924Z"
     },
     {
       "identifier": "oddity",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [],
-      "updatedAt": "2026-09-25T09:28:03.7603625Z"
+      "phase": "done",
+      "url": "https://oddity.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
+      ],
+      "knownGaps": [
+        "Uploads, decisions and audit log live in memory per workspace cookie and reset on restart; no SSO yet",
+        "Analysis runs on the request thread; uploads capped at 30k rows / 300k cells, attribution subsampled above 4k readings per measurement",
+        "Spec limits are per measurement (typed at upload), not per condition; no Requirements Manager lookup yet",
+        "Variance components are rough with only 2-5 benches or instruments; bench and instrument cannot be separated when instruments never moved (flagged in the UI)",
+        "Files without timestamps get synthetic file-ordered timestamps"
+      ],
+      "updatedAt": "2026-09-25T16:54:13.0497109Z"
     },
     {
       "identifier": "phaseshift",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [],
-      "updatedAt": "2026-09-25T11:30:49.1028422+02:00"
+      "phase": "done",
+      "url": "https://phaseshift.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
+      ],
+      "knownGaps": [
+        "Seeded data only; LiveAdapter is a documented stub (ValiBridge, Jira, LOST)",
+        "Back-test runs on synthetic history, so it proves the harness rather than real accuracy",
+        "No SSO: scenarios are shared and reset on restart",
+        "Bench sharing is proportional; no priority lever yet",
+        "AI summary trusts client-computed deltas (codenames, weeks, levers and cited numbers are verified)"
+      ],
+      "updatedAt": "2026-09-25T18:47:31.5009777+02:00"
     },
     {
       "identifier": "promptproof",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [],
-      "updatedAt": "2026-09-25T09:25:31.5979061Z"
+      "phase": "done",
+      "url": "https://promptproof.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
+      ],
+      "knownGaps": [
+        "Edits, imports, new cases and runs live in server memory and reset on restart",
+        "Prose extraction is heuristic (headings, bullets, code spans, value lists, plain-word coverage)",
+        "Replay re-scores recorded behaviour; it cannot predict reactions to new prose (labelled)",
+        "Background runs execute in the web process (single replica); production needs a queue and MySQL",
+        "No authentication yet (MIAMI SSO on the production path)"
+      ],
+      "updatedAt": "2026-09-25T17:01:11.2937928Z"
     },
     {
       "identifier": "rosetta",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [
-        "Build in progress"
+      "phase": "done",
+      "url": "https://rosetta.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
       ],
-      "updatedAt": "2026-09-25T09:23:33.7614143Z"
+      "knownGaps": [
+        "In-memory state: proposals and merges reset on restart",
+        "Persona switcher stands in for MIAMI SSO",
+        "Seeded registry and corpus; team-convention sentinels not vendor-verified",
+        "Merge is two writes; a real store needs a transaction",
+        "Dialect naming conventions are proposals to agree with each system owner"
+      ],
+      "updatedAt": "2026-09-25T15:37:13.2228996Z"
     },
     {
       "identifier": "sweepsmith",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [],
-      "updatedAt": "2026-09-25T09:28:19.2554177Z"
+      "phase": "done",
+      "url": "https://sweepsmith.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
+      ],
+      "knownGaps": [
+        "Seeded, fictional data; edits live in server memory and reset on restart; no SSO yet",
+        "Prior response models are hand-set, not real silicon data",
+        "First-order thermal model (constant ramp rates, capped linear soak, purge); no overshoot or board thermal mass",
+        "Measurements run at every point; parallel per-site instruments not modelled",
+        "Server-side compiles are bounded (60k grid points, 3M steps, 200k export steps, 512 kB bodies, 200 campaigns) but not isolated in worker threads",
+        "No leave-page guard for unsaved edits"
+      ],
+      "updatedAt": "2026-09-25T15:54:23.7507113Z"
     },
     {
       "identifier": "threadline",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [
-        "Build in progress"
+      "phase": "done",
+      "url": "https://threadline.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
       ],
-      "updatedAt": "2026-09-25T09:25:24.0526860Z"
+      "knownGaps": [
+        "Declared incidents live in memory and reset on restart",
+        "LiveAdapter is a documented stub; no real systems are called",
+        "No authentication yet (MIAMI SSO planned); declarer is a fixed fictional reviewer",
+        "Transform/dataset-level defects are assessed but add no bench time (re-processing, not re-measurement)",
+        "Rate limiter and caches are per pod (multi-replica needs a shared store)"
+      ],
+      "updatedAt": "2026-09-25T16:43:24.8191823Z"
     },
     {
       "identifier": "tracepoint",
-      "phase": "building",
-      "url": "",
-      "gatesPassed": [],
-      "knownGaps": [
-        "Build started"
+      "phase": "done",
+      "url": "https://tracepoint.icp.infineon.com",
+      "gatesPassed": [
+        "readme",
+        "checks",
+        "unit",
+        "e2e",
+        "fallback",
+        "review",
+        "live",
+        "pushed"
       ],
-      "updatedAt": "2026-09-25T09:31:44.2696211Z"
+      "knownGaps": [
+        "Library sessions are seeded; LiveAdapter is a documented blueprint. Own data via CSV/log import (link-only, in memory, not access-controlled)",
+        "Pins, accepted clock offsets and imports are in memory and reset on restart",
+        "Offset-only clock model (no drift/ppm)",
+        "SPI mode 0 decode only",
+        "Healthy bands on imported tracks are entered by hand; no HDF5/.wfm import",
+        "AI summaries depend on the shared LiteLLM gateway, which occasionally stalls past the 30 s budget (falls back to rule-based with the reason)"
+      ],
+      "updatedAt": "2026-09-25T18:38:32.9119241Z"
     }
   ]
 }
